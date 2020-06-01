@@ -5,7 +5,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
- * @author ZhangYuanSheng
+ * @author Charles.Kuang
  */
 public enum RetrofitHttpMethodAnnotation {
 

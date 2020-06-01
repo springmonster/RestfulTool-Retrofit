@@ -26,12 +26,12 @@ import core.beans.Request;
 import core.utils.RestUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jetbrains.kotlin.idea.caches.KotlinShortNamesCache;
 
 import java.util.*;
-import java.util.function.Consumer;
 
 /**
- * @author ZhangYuanSheng
+ * @author Charles.Kuang
  * @version 1.0
  */
 public class RetrofitHelper {
@@ -40,7 +40,9 @@ public class RetrofitHelper {
     public static List<Request> getRetrofitRequestByModule(@NotNull Project project, @NotNull Module module) {
         List<Request> moduleList = new ArrayList<>(0);
 
-        List<PsiClass> controllers = getAllControllerClass(project, module);
+        List<PsiClass> controllers = getAllRetrofitJavaClass(project, module);
+        controllers.addAll(getAllRetrofitKotlinClass(project, module));
+
         if (controllers.isEmpty()) {
             return moduleList;
         }
@@ -62,38 +64,61 @@ public class RetrofitHelper {
                 }));
             }
         }
+
         return moduleList;
     }
 
     /**
-     * 获取所有的控制器类
+     * 获取所有的Retrofit Java
      *
      * @param project project
      * @param module  module
      * @return Collection<PsiClass>
      */
     @NotNull
-    private static List<PsiClass> getAllControllerClass(@NotNull Project project, @NotNull Module module) {
+    private static List<PsiClass> getAllRetrofitJavaClass(@NotNull Project project, @NotNull Module module) {
+        GlobalSearchScope moduleScope = RestUtil.getModuleScope(module);
+
         List<PsiClass> psiClasses = new ArrayList<>();
 
-        GlobalSearchScope moduleScope = RestUtil.getModuleScope(module);
         Collection<VirtualFile> virtualFiles = FilenameIndex.getAllFilesByExt(project, "java", moduleScope);
-        virtualFiles.forEach(new Consumer<VirtualFile>() {
-            @Override
-            public void accept(VirtualFile virtualFile) {
-                Collection<PsiClass> psiClasses1 = JavaShortClassNameIndex.getInstance().get(virtualFile.getNameWithoutExtension(), project, moduleScope);
-                if (psiClasses1 != null) {
-                    Object[] objects = psiClasses1.toArray();
-                    if (objects.length >= 1) {
-                        psiClasses.add((PsiClass) objects[0]);
-                        System.out.println(virtualFile.getName());
-                        System.out.println((PsiClass) objects[0]);
-                    }
-                }
+
+        virtualFiles.forEach(virtualFile -> {
+            List<PsiClass> psiClassList = (List<PsiClass>) JavaShortClassNameIndex.getInstance().get(virtualFile.getNameWithoutExtension(), project, moduleScope);
+            if (psiClassList != null && !psiClassList.isEmpty() && psiClassList.get(0).isInterface()) {
+                psiClasses.add(psiClassList.get(0));
+                System.out.println(psiClassList.get(0));
             }
         });
 
         return psiClasses;
+    }
+
+    /**
+     * 获取所有的Retrofit Kotlin
+     *
+     * @param project project
+     * @param module  module
+     * @return Collection<PsiClass>
+     */
+    @NotNull
+    private static List<PsiClass> getAllRetrofitKotlinClass(@NotNull Project project, @NotNull Module module) {
+        GlobalSearchScope moduleScope = RestUtil.getModuleScope(module);
+
+        List<PsiClass> psiClassList = new ArrayList<>();
+
+        Collection<VirtualFile> virtualFiles = FilenameIndex.getAllFilesByExt(project, "kt", moduleScope);
+
+        virtualFiles.forEach(virtualFile -> {
+            PsiClass[] psiClasses = KotlinShortNamesCache.getInstance(project).getClassesByName(virtualFile.getNameWithoutExtension(), moduleScope);
+            List<PsiClass> classList = Arrays.asList(psiClasses);
+            if (!classList.isEmpty() && classList.get(0).isInterface()) {
+                psiClassList.add(classList.get(0));
+                System.out.println(classList.get(0));
+            }
+        });
+
+        return psiClassList;
     }
 
     /**
@@ -181,6 +206,7 @@ public class RetrofitHelper {
         return requests;
     }
 
+
     /**
      * 获取方法中的参数请求，生成RequestBean
      *
@@ -196,30 +222,5 @@ public class RetrofitHelper {
         }
 
         return requests;
-    }
-
-    enum Control {
-
-        /**
-         * <p>@Controller</p>
-         */
-        Controller("Controller"),
-
-        /**
-         * <p>@RestController</p>
-         */
-        RestController("RestController"),
-
-        API("ApiDefinition");
-
-        private final String name;
-
-        Control(String name) {
-            this.name = name;
-        }
-
-        public String getName() {
-            return name;
-        }
     }
 }
