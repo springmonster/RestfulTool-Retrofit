@@ -1,0 +1,69 @@
+<idea-plugin>
+    <id>cn.cloud.auto.restful.tool</id>
+    <name>RestfulTool</name>
+    <version>1.1.8-RELEASE</version>
+    <vendor email="2862297923@qq.com" url="">ClionCo</vendor>
+
+    <!--suppress PluginXmlValidity -->
+    <description><![CDATA[
+      A set of auxiliary tools for Restful service development.<br>
+        1.Provides a display window of Services tree;<br>
+        2.Click the URL to jump directly to the corresponding method definition;<br>
+        3.A simple http request tool;<br>
+        4.Support Spring system (Spring MVC / Spring Boot)<br>
+        5.Support `Navigate-> Request Service` search Mapping (Ctrl + Alt + /)<br>
+      <br>
+      一套 Restful 服务开发辅助工具集。<br>
+        1.提供了一个 Services tree 的显示窗口;<br>
+        2.点击 URL 直接跳转到对应的方法定义;<br>
+        3.一个简单的 http 请求工具;<br>
+        4.支持 Spring 体系 (Spring MVC / Spring Boot);<br>
+        5.支持 `Navigate -> Request Service` 搜索 Mapping (Ctrl + Alt + /)<br>
+    ]]></description>
+
+    <!--suppress PluginXmlValidity -->
+    <change-notes><![CDATA[
+      <ul>
+        <li> 优化项目结构，为后续增加图标主题节省精力 </li>
+      </ul>
+    ]]>
+    </change-notes>
+
+    <!-- please see https://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/build_number_ranges.html for description -->
+    <idea-version since-build="201.0"/>
+
+    <!-- please see https://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
+         on how to target different products -->
+    <depends>com.intellij.modules.platform</depends>
+    <depends>com.intellij.java</depends>
+    <depends>com.intellij.properties</depends>
+    <depends>org.jetbrains.plugins.yaml</depends>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <applicationService serviceImplementation="core.configuration.AppSettingsState"/>
+
+        <applicationConfigurable parentId="tools"
+                                 instance="core.configuration.AppSettingsConfigurable"
+                                 id="core.configuration.AppSettingsConfigurable"
+                                 displayName="Restful Tool"/>
+
+        <projectService serviceInterface="core.service.RestfulToolService"
+                        serviceImplementation="core.service.impl.RestfulToolServiceImpl"/>
+
+        <projectService serviceImplementation="core.view.search.GotoRequestConfiguration"/>
+
+        <toolWindow id="RestfulTool" anchor="right"
+                    factoryClass="core.view.window.RestfulToolWindowFactory" order="last"
+                    doNotActivateOnStart="false" icon="/icons/service.png"/>
+    </extensions>
+
+    <actions>
+        <action id="Tool.GotoRequestService" class="core.view.search.GotoRequestAction"
+                text="Request _Service" description="Goto request service"
+                icon="AllIcons.Actions.Search">
+            <add-to-group group-id="GoToTargetEx" anchor="first"/>
+            <keyboard-shortcut keymap="$default" first-keystroke="ctrl alt SLASH"/>
+        </action>
+    </actions>
+
+</idea-plugin>
