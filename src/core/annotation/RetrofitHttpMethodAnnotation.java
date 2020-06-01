@@ -10,11 +10,6 @@ import org.jetbrains.annotations.Nullable;
 public enum RetrofitHttpMethodAnnotation {
 
     /**
-     * RequestMapping
-     */
-//    REQUEST_MAPPING("retrofit2.http.POST", HttpMethod.REQUEST),
-
-    /**
      * GetMapping
      */
     GET_MAPPING("retrofit2.http.GET", HttpMethod.GET),
@@ -54,9 +49,9 @@ public enum RetrofitHttpMethodAnnotation {
 
     @Nullable
     public static RetrofitHttpMethodAnnotation getByQualifiedName(String qualifiedName) {
-        for (RetrofitHttpMethodAnnotation springRequestAnnotation : RetrofitHttpMethodAnnotation.values()) {
-            if (springRequestAnnotation.getQualifiedName().equals(qualifiedName)) {
-                return springRequestAnnotation;
+        for (RetrofitHttpMethodAnnotation retrofitHttpMethodAnnotation : RetrofitHttpMethodAnnotation.values()) {
+            if (retrofitHttpMethodAnnotation.getQualifiedName().equals(qualifiedName)) {
+                return retrofitHttpMethodAnnotation;
             }
         }
         return null;
@@ -64,9 +59,9 @@ public enum RetrofitHttpMethodAnnotation {
 
     @Nullable
     public static RetrofitHttpMethodAnnotation getByShortName(String requestMapping) {
-        for (RetrofitHttpMethodAnnotation springRequestAnnotation : RetrofitHttpMethodAnnotation.values()) {
-            if (springRequestAnnotation.getQualifiedName().endsWith(requestMapping)) {
-                return springRequestAnnotation;
+        for (RetrofitHttpMethodAnnotation retrofitHttpMethodAnnotation : RetrofitHttpMethodAnnotation.values()) {
+            if (retrofitHttpMethodAnnotation.getQualifiedName().endsWith(requestMapping)) {
+                return retrofitHttpMethodAnnotation;
             }
         }
         return null;
