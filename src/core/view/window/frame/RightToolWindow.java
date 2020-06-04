@@ -6,10 +6,8 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.JBPopupMenu;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.ui.TreeSpeedSearch;
-import com.intellij.ui.components.JBCheckBox;
 import com.intellij.ui.components.JBScrollPane;
 import com.intellij.util.ui.JBUI;
-import core.beans.PropertiesKey;
 import core.beans.Request;
 import core.service.RestTopic;
 import core.utils.RestUtil;
@@ -103,14 +101,6 @@ public class RightToolWindow extends JPanel {
         // 去掉按钮的边框
         scanApi.setBorderPainted(false);
         toolPanel.add(scanApi, BorderLayout.WEST);
-
-        JBCheckBox scanWithLibrary = new JBCheckBox("scan with library");
-        scanWithLibrary.setSelected(PropertiesKey.scanServiceWithLibrary(project));
-        toolPanel.add(scanWithLibrary, BorderLayout.EAST);
-        scanWithLibrary.addActionListener(e -> {
-            PropertiesKey.scanServiceWithLibrary(project, scanWithLibrary.isSelected());
-            renderRequestTree();
-        });
 
         JScrollPane scrollPaneTree = new JBScrollPane();
         scrollPaneTree.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
@@ -285,7 +275,7 @@ public class RightToolWindow extends JPanel {
         JBPopupMenu menu = new JBPopupMenu();
         ActionListener actionListener = actionEvent -> {
             String copy;
-            GlobalSearchScope scope = request.getPsiMethod().getResolveScope();
+            GlobalSearchScope scope = request.getDartComponent().getResolveScope();
             String contextPath = RestUtil.scanContextPath(project, scope);
             switch (((JMenuItem) actionEvent.getSource()).getMnemonic()) {
                 case 0:

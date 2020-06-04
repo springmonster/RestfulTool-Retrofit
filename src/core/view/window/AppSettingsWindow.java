@@ -74,7 +74,6 @@ public class AppSettingsWindow {
     @NotNull
     public AppSetting getAppSetting() {
         AppSetting setting = new AppSetting();
-        setting.scanServicesWithLibraryDefault = globalScanServiceWithLib.isSelected();
         //noinspection ConstantConditions
         setting.iconTypeClass = IconTypeManager.formatClass(((IconType) selectIconType.getSelectedItem()).getClass());
         return setting;
@@ -84,7 +83,6 @@ public class AppSettingsWindow {
         if (setting == null) {
             return;
         }
-        globalScanServiceWithLib.setSelected(setting.scanServicesWithLibraryDefault);
         selectIconType.setSelectedItem(IconTypeManager.getInstance(IconTypeManager.formatName(setting.iconTypeClass)));
     }
 }

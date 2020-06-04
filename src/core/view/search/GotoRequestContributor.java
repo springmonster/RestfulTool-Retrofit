@@ -51,7 +51,7 @@ public class GotoRequestContributor implements ChooseByNameContributor {
 
         itemList = new ArrayList<>(requests.size());
         requests.stream().map(request -> new RestServiceItem(
-                request.getPsiMethod(),
+                request.getDartComponent(),
                 request.getMethod(),
                 request.getPath()
         )).forEach(restServiceItem -> {

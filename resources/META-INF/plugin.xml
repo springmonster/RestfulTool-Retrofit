@@ -57,7 +57,7 @@
 
         <toolWindow id="RestfulTool" anchor="right"
                     factoryClass="core.view.window.RestfulToolWindowFactory" order="last"
-                    doNotActivateOnStart="false" icon="/icons/service.png"/>
+                    icon="/icons/service.png"/>
     </extensions>
 
     <actions>

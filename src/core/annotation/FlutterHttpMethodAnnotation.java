@@ -9,27 +9,32 @@ import org.jetbrains.annotations.Nullable;
 public enum FlutterHttpMethodAnnotation {
 
     /**
-     * GetMapping
+     * GET
      */
     GET("GET", HttpMethod.GET),
 
     /**
-     * PostMapping
+     * POST
      */
     POST("POST", HttpMethod.POST),
 
     /**
-     * PutMapping
+     * PUT
      */
     PUT("PUT", HttpMethod.PUT),
 
     /**
-     * DeleteMapping
+     * PATCH
      */
     PATCH("PATCH", HttpMethod.PATCH),
 
     /**
-     * PatchMapping
+     * HEAD
+     */
+    HEAD("HEAD", HttpMethod.HEAD),
+
+    /**
+     * Delete
      */
     DELETE("DELETE", HttpMethod.DELETE);
 

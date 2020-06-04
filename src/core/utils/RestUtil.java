@@ -25,7 +25,6 @@ import com.intellij.psi.impl.source.PsiClassReferenceType;
 import com.intellij.psi.search.FilenameIndex;
 import com.intellij.psi.search.GlobalSearchScope;
 import core.beans.HttpMethod;
-import core.beans.PropertiesKey;
 import core.beans.Request;
 import core.utils.scanner.RetrofitHelper;
 import org.jetbrains.annotations.Contract;
@@ -241,15 +240,7 @@ public class RestUtil {
     }
 
     public static GlobalSearchScope getModuleScope(@NotNull Module module) {
-        return getModuleScope(module, PropertiesKey.scanServiceWithLibrary(module.getProject()));
-    }
-
-    protected static GlobalSearchScope getModuleScope(@NotNull Module module, boolean hasLibrary) {
-        if (hasLibrary) {
-            return module.getModuleWithLibrariesScope();
-        } else {
-            return module.getModuleScope();
-        }
+        return module.getModuleScope();
     }
 
     @Nullable

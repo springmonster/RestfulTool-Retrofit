@@ -2,7 +2,6 @@ package core.beans;
 
 import com.intellij.ide.util.PropertiesComponent;
 import com.intellij.openapi.project.Project;
-import core.configuration.AppSettingsState;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -20,13 +19,6 @@ public enum PropertiesKey {
 
     PropertiesKey(String value) {
         this.value = value;
-    }
-
-    public static boolean scanServiceWithLibrary(@NotNull Project project) {
-        return PropertiesComponent.getInstance(project).getBoolean(
-                SCAN_SERVICE_WITH_LIB.value,
-                AppSettingsState.getInstance().getAppSetting().scanServicesWithLibraryDefault
-        );
     }
 
     public static void scanServiceWithLibrary(@NotNull Project project, boolean flag) {
