@@ -24,7 +24,6 @@ import com.intellij.psi.*;
 import com.intellij.psi.impl.source.PsiClassReferenceType;
 import com.intellij.psi.search.FilenameIndex;
 import com.intellij.psi.search.GlobalSearchScope;
-import core.annotation.SpringHttpMethodAnnotation;
 import core.beans.HttpMethod;
 import core.beans.PropertiesKey;
 import core.beans.Request;
@@ -207,79 +206,12 @@ public class RestUtil {
      */
     @NotNull
     public static List<Request> getAllRequestByModule(@NotNull Project project, @NotNull Module module) {
-        // JAX-RS方式
-//        List<Request> jaxrsRequestByModule = JaxrsHelper.getJaxrsRequestByModule(project, module);
-//        if (!jaxrsRequestByModule.isEmpty()) {
-//            return jaxrsRequestByModule;
-//        }
-//
-//        // Spring RESTFul方式
-//        List<Request> springRequestByModule = SpringHelper.getSpringRequestByModule(project, module);
-//        if (!springRequestByModule.isEmpty()) {
-//            return springRequestByModule;
-//        }
-//
-//        // Retrofit RESTFul方式(Java and Kotlin)
-//        List<Request> retrofitRequestByModule = RetrofitHelper.getRetrofitRequestByModule(project, module);
-//        if (!retrofitRequestByModule.isEmpty()) {
-//            return retrofitRequestByModule;
-//        }
-
         // Retrofit RESTFul方式(Flutter)
         List<Request> retrofitFlutterRequestByModule = RetrofitHelper.getRetrofitRequestByModule(project, module);
         if (!retrofitFlutterRequestByModule.isEmpty()) {
             return retrofitFlutterRequestByModule;
         }
         return Collections.emptyList();
-    }
-
-    /**
-     * 获取方法参数
-     *
-     * @param method method
-     */
-    @NotNull
-    public static String getRequestParamsTempData(@NotNull PsiMethod method) {
-        StringBuilder tempData = new StringBuilder();
-
-        PsiParameterList parameterList = method.getParameterList();
-        if (!parameterList.isEmpty()) {
-            for (PsiParameter parameter : parameterList.getParameters()) {
-                PsiAnnotation[] parameterAnnotations = parameter.getAnnotations();
-                String parameterName = parameter.getName();
-                PsiType parameterType = parameter.getType();
-
-                boolean flag = true;
-
-                for (PsiAnnotation parameterAnnotation : parameterAnnotations) {
-                    if (!SpringHttpMethodAnnotation.REQUEST_PARAM.getQualifiedName().equals(parameterAnnotation.getQualifiedName())) {
-                        continue;
-                    }
-                    List<JvmAnnotationAttribute> attributes = parameterAnnotation.getAttributes();
-                    for (JvmAnnotationAttribute attribute : attributes) {
-                        String name = attribute.getAttributeName();
-                        if (!("name".equals(name) || "value".equals(name))) {
-                            continue;
-                        }
-                        Object value = RestUtil.getAttributeValue(attribute.getAttributeValue());
-                        if (value instanceof String) {
-                            parameterName = ((String) value);
-                            flag = !flag;
-                        }
-                    }
-                }
-
-                Object data = RestUtil.getTypeDefaultData(method, parameterType);
-
-                if (data != null) {
-                    if (flag) {
-                        tempData.append(parameterName).append(": ");
-                    }
-                    tempData.append(data).append("\n");
-                }
-            }
-        }
-        return tempData.toString();
     }
 
     /**
