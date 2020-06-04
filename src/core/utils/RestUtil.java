@@ -28,9 +28,7 @@ import core.annotation.SpringHttpMethodAnnotation;
 import core.beans.HttpMethod;
 import core.beans.PropertiesKey;
 import core.beans.Request;
-import core.utils.scanner.JaxrsHelper;
 import core.utils.scanner.RetrofitHelper;
-import core.utils.scanner.SpringHelper;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -210,21 +208,27 @@ public class RestUtil {
     @NotNull
     public static List<Request> getAllRequestByModule(@NotNull Project project, @NotNull Module module) {
         // JAX-RS方式
-        List<Request> jaxrsRequestByModule = JaxrsHelper.getJaxrsRequestByModule(project, module);
-        if (!jaxrsRequestByModule.isEmpty()) {
-            return jaxrsRequestByModule;
-        }
+//        List<Request> jaxrsRequestByModule = JaxrsHelper.getJaxrsRequestByModule(project, module);
+//        if (!jaxrsRequestByModule.isEmpty()) {
+//            return jaxrsRequestByModule;
+//        }
+//
+//        // Spring RESTFul方式
+//        List<Request> springRequestByModule = SpringHelper.getSpringRequestByModule(project, module);
+//        if (!springRequestByModule.isEmpty()) {
+//            return springRequestByModule;
+//        }
+//
+//        // Retrofit RESTFul方式(Java and Kotlin)
+//        List<Request> retrofitRequestByModule = RetrofitHelper.getRetrofitRequestByModule(project, module);
+//        if (!retrofitRequestByModule.isEmpty()) {
+//            return retrofitRequestByModule;
+//        }
 
-        // Spring RESTFul方式
-        List<Request> springRequestByModule = SpringHelper.getSpringRequestByModule(project, module);
-        if (!springRequestByModule.isEmpty()) {
-            return springRequestByModule;
-        }
-
-        // Retrofit RESTFul方式
-        List<Request> retrofitRequestByModule = RetrofitHelper.getRetrofitRequestByModule(project, module);
-        if (!retrofitRequestByModule.isEmpty()) {
-            return retrofitRequestByModule;
+        // Retrofit RESTFul方式(Flutter)
+        List<Request> retrofitFlutterRequestByModule = RetrofitHelper.getRetrofitRequestByModule(project, module);
+        if (!retrofitFlutterRequestByModule.isEmpty()) {
+            return retrofitFlutterRequestByModule;
         }
         return Collections.emptyList();
     }

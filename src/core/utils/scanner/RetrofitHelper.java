@@ -16,10 +16,18 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiAnnotation;
 import com.intellij.psi.PsiClass;
+import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiMethod;
 import com.intellij.psi.impl.java.stubs.index.JavaShortClassNameIndex;
 import com.intellij.psi.search.FilenameIndex;
 import com.intellij.psi.search.GlobalSearchScope;
+import com.intellij.psi.util.PsiTreeUtil;
+import com.intellij.psi.util.PsiUtilBase;
+import com.jetbrains.lang.dart.psi.DartClass;
+import com.jetbrains.lang.dart.psi.DartComponent;
+import com.jetbrains.lang.dart.psi.DartFile;
+import com.jetbrains.lang.dart.psi.DartMetadata;
+import core.annotation.FlutterHttpMethodAnnotation;
 import core.annotation.RetrofitHttpMethodAnnotation;
 import core.beans.HttpMethod;
 import core.beans.Request;
@@ -40,32 +48,33 @@ public class RetrofitHelper {
     public static List<Request> getRetrofitRequestByModule(@NotNull Project project, @NotNull Module module) {
         List<Request> moduleList = new ArrayList<>(0);
 
-        List<PsiClass> controllers = getAllRetrofitJavaClass(project, module);
-        controllers.addAll(getAllRetrofitKotlinClass(project, module));
+//        List<PsiClass> controllers = getAllRetrofitJavaClass(project, module);
+//        controllers.addAll(getAllRetrofitKotlinClass(project, module));
+//        List<PsiClass> controllers = getAllRetrofitDartClass(project, module);
+//
+//        if (controllers.isEmpty()) {
+//            return moduleList;
+//        }
+//
+//        for (PsiClass controllerClass : controllers) {
+//            List<Request> parentRequests = new ArrayList<>(0);
+//            List<Request> childrenRequests = new ArrayList<>();
+//
+//            PsiMethod[] psiMethods = controllerClass.getMethods();
+//            for (PsiMethod psiMethod : psiMethods) {
+//                childrenRequests.addAll(getRequests(psiMethod));
+//            }
+//            if (parentRequests.isEmpty()) {
+//                moduleList.addAll(childrenRequests);
+//            } else {
+//                parentRequests.forEach(parentRequest -> childrenRequests.forEach(childrenRequest -> {
+//                    Request request = childrenRequest.copyWithParent(parentRequest);
+//                    moduleList.add(request);
+//                }));
+//            }
+//        }
 
-        if (controllers.isEmpty()) {
-            return moduleList;
-        }
-
-        for (PsiClass controllerClass : controllers) {
-            List<Request> parentRequests = new ArrayList<>(0);
-            List<Request> childrenRequests = new ArrayList<>();
-
-            PsiMethod[] psiMethods = controllerClass.getMethods();
-            for (PsiMethod psiMethod : psiMethods) {
-                childrenRequests.addAll(getRequests(psiMethod));
-            }
-            if (parentRequests.isEmpty()) {
-                moduleList.addAll(childrenRequests);
-            } else {
-                parentRequests.forEach(parentRequest -> childrenRequests.forEach(childrenRequest -> {
-                    Request request = childrenRequest.copyWithParent(parentRequest);
-                    moduleList.add(request);
-                }));
-            }
-        }
-
-        return moduleList;
+        return getAllRetrofitDartClass(project, module);
     }
 
     /**
@@ -119,6 +128,60 @@ public class RetrofitHelper {
         });
 
         return psiClassList;
+    }
+
+    @NotNull
+    private static List<Request> getAllRetrofitDartClass(@NotNull Project project, @NotNull Module module) {
+
+        List<Request> requests = new ArrayList<>();
+
+        Collection<VirtualFile> virtualFiles = FilenameIndex.getAllFilesByExt(project, "dart");
+
+        virtualFiles.forEach(virtualFile -> {
+            DartFile psiFile = (DartFile) PsiUtilBase.getPsiFile(project, virtualFile);
+
+            String text = psiFile.getText();
+
+
+            if (text.contains("@RestApi()")) {
+                DartClass dartClass = PsiTreeUtil.findChildOfType(psiFile, DartClass.class);
+                List<DartComponent> methods = dartClass.getMethods();
+
+
+                for (int i = 0; i < methods.size(); i++) {
+                    DartComponent dartComponent = methods.get(i);
+                    List<DartMetadata> metadataList = dartComponent.getMetadataList();
+
+                    for (int j = 0; j < metadataList.size(); j++) {
+                        DartMetadata dartMetadata = metadataList.get(j);
+
+                        String httpMethod = dartMetadata.getFirstChild().getNextSibling().getText();
+
+                        FlutterHttpMethodAnnotation byQualifiedName = FlutterHttpMethodAnnotation.getByQualifiedName(httpMethod);
+
+                        if (byQualifiedName == null) {
+                            continue;
+                        }
+
+                        PsiElement lastChild = dartMetadata.getLastChild();
+                        String path = lastChild.getText().substring(2, lastChild.getTextLength() - 2);
+
+                        System.out.println(httpMethod);
+                        System.out.println(path);
+                        System.out.println("------------");
+
+                        requests.add(new Request(
+                                byQualifiedName.getMethod(),
+                                path,
+                                dartComponent
+                        ));
+                    }
+                    System.out.println("1111 " + methods.get(i).getName());
+                }
+            }
+        });
+
+        return requests;
     }
 
     /**

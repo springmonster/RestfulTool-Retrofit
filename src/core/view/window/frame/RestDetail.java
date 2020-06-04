@@ -18,8 +18,8 @@ import com.intellij.ui.components.JBLabel;
 import com.intellij.ui.components.JBScrollPane;
 import com.intellij.ui.components.JBTabbedPane;
 import com.intellij.ui.components.JBTextField;
-import core.beans.Request;
 import core.beans.HttpMethod;
+import core.beans.Request;
 import core.utils.RestUtil;
 import org.jdesktop.swingx.JXButton;
 import org.jdesktop.swingx.JXEditorPane;
@@ -147,8 +147,25 @@ public class RestDetail extends JPanel {
         String reqBody = "";
 
         try {
+//            if (request != null) {
+//                GlobalSearchScope scope = request.getPsiMethod().getResolveScope();
+//                reqUrl = RestUtil.getRequestUrl(
+//                        RestUtil.scanListenerProtocol(project, scope),
+//                        RestUtil.scanListenerPort(project, scope),
+//                        RestUtil.scanContextPath(project, scope),
+//                        request.getPath()
+//                );
+//
+//                // 选择Body页面
+//                tabbedPane.setSelectedIndex(1);
+//
+//                selItem = request.getMethod() == null ? HttpMethod.GET : request.getMethod();
+//
+//                reqBody = RestUtil.getRequestParamsTempData(request.getPsiMethod());
+//            }
+
             if (request != null) {
-                GlobalSearchScope scope = request.getPsiMethod().getResolveScope();
+                GlobalSearchScope scope = request.getDartComponent().getResolveScope();
                 reqUrl = RestUtil.getRequestUrl(
                         RestUtil.scanListenerProtocol(project, scope),
                         RestUtil.scanListenerPort(project, scope),
@@ -159,9 +176,9 @@ public class RestDetail extends JPanel {
                 // 选择Body页面
                 tabbedPane.setSelectedIndex(1);
 
-                selItem = request.getMethod() == null ? HttpMethod.GET : request.getMethod();
-
-                reqBody = RestUtil.getRequestParamsTempData(request.getPsiMethod());
+//                selItem = request.getMethod() == null ? HttpMethod.GET : request.getMethod();
+//
+//                reqBody = RestUtil.getRequestParamsTempData(request.getPsiMethod());
             }
         } catch (PsiInvalidElementAccessException e) {
             /*
