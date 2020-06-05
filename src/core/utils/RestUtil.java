@@ -10,9 +10,6 @@
  */
 package core.utils;
 
-import cn.hutool.http.HttpRequest;
-import cn.hutool.http.HttpUtil;
-import cn.hutool.http.Method;
 import com.intellij.lang.jvm.annotation.*;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
@@ -21,7 +18,6 @@ import com.intellij.psi.*;
 import com.intellij.psi.impl.source.PsiClassReferenceType;
 import com.intellij.psi.search.FilenameIndex;
 import com.intellij.psi.search.GlobalSearchScope;
-import core.beans.HttpMethod;
 import core.beans.Request;
 import core.utils.scanner.RetrofitHelper;
 import org.jetbrains.annotations.Contract;
@@ -47,35 +43,6 @@ public class RestUtil {
 
     public static String getBaseUrl() {
         return BASE_URL;
-    }
-
-    /**
-     * 发送http请求
-     *
-     * @param method 请求方式
-     * @param url    地址
-     * @param head   请求头
-     * @param body   请求体
-     * @return 返回结果
-     */
-    public static String sendRequest(HttpMethod method, String url, String head, String body) {
-        String resp;
-        try {
-            HttpRequest request = HttpUtil.createRequest(Method.valueOf(method.name()), url);
-
-            if (head != null && !"".equals(head.trim())) {
-                tempDataCoverToMap(head).forEach(request::header);
-            }
-            if (body != null && !"".equals(body.trim())) {
-                tempDataCoverToMap(body).forEach(request::form);
-            }
-
-            resp = request.timeout(REQUEST_TIMEOUT).execute().body();
-        } catch (Exception e) {
-            e.printStackTrace();
-            resp = e.getMessage();
-        }
-        return resp;
     }
 
     @NotNull
