@@ -14,11 +14,8 @@ import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpUtil;
 import cn.hutool.http.Method;
 import com.intellij.lang.jvm.annotation.*;
-import com.intellij.lang.properties.PropertiesFileType;
-import com.intellij.lang.properties.psi.PropertiesFile;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
-import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.*;
 import com.intellij.psi.impl.source.PsiClassReferenceType;
@@ -30,10 +27,7 @@ import core.utils.scanner.RetrofitHelper;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.jetbrains.yaml.YAMLFileType;
-import org.jetbrains.yaml.YAMLUtil;
-import org.jetbrains.yaml.psi.YAMLFile;
-import org.jetbrains.yaml.psi.YAMLKeyValue;
+import org.jetbrains.kotlin.idea.caches.KotlinShortNamesCache;
 
 import java.lang.reflect.Field;
 import java.util.*;
@@ -45,75 +39,14 @@ import java.util.*;
 public class RestUtil {
 
     private static final int REQUEST_TIMEOUT = 1000 * 10;
+    private static String BASE_URL = "http://localhost:8080";
 
-    /**
-     * 扫描服务端口
-     *
-     * @param project project
-     * @param scope   scope
-     * @return port
-     */
-    public static int scanListenerPort(@NotNull Project project, @NotNull GlobalSearchScope scope) {
-        // listener of default server port
-        int port = 8080;
-
-        try {
-            String value = getConfigurationValue(
-                    getScanConfigurationFile(project, scope),
-                    "server.port"
-            );
-            if (value == null || "".equals((value = value.trim()))) {
-                throw new NumberFormatException();
-            }
-            port = Integer.parseInt(value);
-        } catch (NumberFormatException ignore) {
-        }
-        return port;
+    public static void setBaseUrl(String baseUrl) {
+        BASE_URL = baseUrl;
     }
 
-    /**
-     * 扫描服务协议
-     *
-     * @param project project
-     * @param scope   scope
-     * @return protocol
-     */
-    @NotNull
-    public static String scanListenerProtocol(@NotNull Project project, @NotNull GlobalSearchScope scope) {
-        // default protocol
-        String protocol = "http";
-
-        try {
-            String value = getConfigurationValue(getScanConfigurationFile(project, scope), "server.ssl.enabled");
-            if (value == null || "".equals((value = value.trim()))) {
-                throw new Exception();
-            }
-            if (Boolean.parseBoolean(value)) {
-                protocol = "https";
-            }
-        } catch (Exception ignore) {
-        }
-        return protocol;
-    }
-
-    /**
-     * 扫描请求路径前缀
-     *
-     * @param project project
-     * @param scope   scope
-     * @return path
-     */
-    @Nullable
-    public static String scanContextPath(@NotNull Project project, @NotNull GlobalSearchScope scope) {
-        // server.servlet.context-path
-        try {
-            return getConfigurationValue(
-                    getScanConfigurationFile(project, scope),
-                    "server.servlet.context-path"
-            );
-        } catch (Exception ignore) {
-            return null;
-        }
+    public static String getBaseUrl() {
+        return BASE_URL;
     }
 
     /**
@@ -205,35 +138,71 @@ public class RestUtil {
      */
     @NotNull
     public static List<Request> getAllRequestByModule(@NotNull Project project, @NotNull Module module) {
-        // Retrofit RESTFul方式(Flutter)
-        List<Request> retrofitFlutterRequestByModule = RetrofitHelper.getRetrofitRequestByModule(project, module);
-        if (!retrofitFlutterRequestByModule.isEmpty()) {
-            return retrofitFlutterRequestByModule;
+        // Retrofit RESTFul方式
+        List<Request> retrofitRequestByModule = RetrofitHelper.getRetrofitRequestByModule(project, module);
+        if (!retrofitRequestByModule.isEmpty()) {
+            return retrofitRequestByModule;
         }
         return Collections.emptyList();
     }
 
     /**
-     * 获取url
+     * 获取方法参数
      *
-     * @param protocol    协议
-     * @param port        端口
-     * @param contextPath 访问根目录名
-     * @param path        路径
-     * @return url
+     * @param method method
      */
     @NotNull
-    public static String getRequestUrl(@NotNull String protocol, @Nullable Integer port, @Nullable String contextPath, String path) {
-        StringBuilder url = new StringBuilder(protocol + "://");
-        url.append("localhost");
-        if (port != null) {
-            url.append(":").append(port);
+    public static String getRequestParamsTempData(@NotNull PsiMethod method) {
+        StringBuilder tempData = new StringBuilder();
+
+        PsiParameterList parameterList = method.getParameterList();
+        if (!parameterList.isEmpty()) {
+            for (PsiParameter parameter : parameterList.getParameters()) {
+                PsiAnnotation[] parameterAnnotations = parameter.getAnnotations();
+                String parameterName = parameter.getName();
+                PsiType parameterType = parameter.getType();
+
+                boolean flag = true;
+
+                for (PsiAnnotation parameterAnnotation : parameterAnnotations) {
+                    List<JvmAnnotationAttribute> attributes = parameterAnnotation.getAttributes();
+                    for (JvmAnnotationAttribute attribute : attributes) {
+                        String name = attribute.getAttributeName();
+                        if (!("name".equals(name) || "value".equals(name))) {
+                            continue;
+                        }
+                        Object value = RestUtil.getAttributeValue(attribute.getAttributeValue());
+                        if (value instanceof String) {
+                            flag = !flag;
+                        }
+                    }
+                }
+
+                Object data = RestUtil.getTypeDefaultData(method, parameterType);
+
+                if (data != null) {
+                    tempData.append(data).append("\n");
+                }
+            }
         }
-        if (contextPath != null && !"null".equals(contextPath) && contextPath.startsWith("/")) {
-            url.append(contextPath);
-        }
-        if (!path.startsWith("/")) {
-            url.append("/");
+        return tempData.toString();
+    }
+
+    /**
+     * 获取拼接的url
+     *
+     * @param baseUrl
+     * @param path
+     * @return
+     */
+    @NotNull
+    public static String getRequestUrl(String baseUrl, String path) {
+        StringBuilder url = new StringBuilder();
+        if (!path.startsWith("http") && !path.startsWith("https")) {
+            url.append(baseUrl);
+            if (!path.startsWith("/")) {
+                url.append("/");
+            }
         }
         url.append(path);
         return url.toString();
@@ -245,21 +214,27 @@ public class RestUtil {
 
     @Nullable
     private static Object getTypeDefaultData(@NotNull PsiMethod method, PsiType parameterType) {
-        Object data = null;
         if (parameterType instanceof PsiArrayType) {
-            data = "[]";
+            return "[]";
         } else if (parameterType instanceof PsiClassReferenceType) {
             // Object | String | Integer | List<?> | Map<K, V>
             PsiClassReferenceType type = (PsiClassReferenceType) parameterType;
 
             GlobalSearchScope resolveScope = type.getResolveScope();
-            PsiFile[] psiFiles = FilenameIndex.getFilesByName(
+            PsiFile[] psiFilesJava = FilenameIndex.getFilesByName(
                     method.getProject(),
                     type.getName() + ".java",
                     resolveScope
             );
-            if (psiFiles.length > 0) {
-                for (PsiFile psiFile : psiFiles) {
+
+            PsiFile[] psiFilesKotlin = FilenameIndex.getFilesByName(
+                    method.getProject(),
+                    type.getName() + ".kt",
+                    resolveScope
+            );
+
+            if (psiFilesJava.length > 0) {
+                for (PsiFile psiFile : psiFilesJava) {
                     if (psiFile instanceof PsiJavaFile) {
                         PsiClass[] fileClasses = ((PsiJavaFile) psiFile).getClasses();
                         StringBuilder item = new StringBuilder();
@@ -268,25 +243,51 @@ public class RestUtil {
                                 PsiField[] fields = psiClass.getFields();
                                 for (PsiField field : fields) {
                                     String fieldName = field.getName();
+                                    for (int i = 0; i < field.getAnnotations().length; i++) {
+                                        for (int i1 = 0; i1 < field.getAnnotations()[i].getAttributes().size(); i1++) {
+                                            fieldName = field.getAnnotations()[i].getParameterList().getAttributes()[0].getLiteralValue();
+                                            break;
+                                        }
+                                    }
                                     Object defaultData = getTypeDefaultData(method, field.getType());
                                     item.append(fieldName).append(": ").append(defaultData).append("\n");
                                 }
                                 break;
                             }
                         }
-                        data = item.toString();
+                        return item.toString();
+                    }
+                }
+            } else if (psiFilesKotlin.length > 0) {
+                @NotNull PsiClass[] psiClasses = KotlinShortNamesCache.getInstance(method.getProject()).getClassesByName(type.getName(), resolveScope);
+
+                StringBuilder item = new StringBuilder();
+
+                for (PsiClass psiClass : psiClasses) {
+                    if (type.getReference().getQualifiedName().equals(psiClass.getQualifiedName())) {
+                        PsiField[] fields = psiClass.getFields();
+                        for (PsiField field : fields) {
+                            String fieldName = field.getName();
+                            for (int i = 0; i < field.getAnnotations().length; i++) {
+                                for (int i1 = 0; i1 < field.getAnnotations()[i].getAttributes().size(); i1++) {
+                                    fieldName = field.getAnnotations()[i].getParameterList().getAttributes()[0].getLiteralValue();
+                                    break;
+                                }
+                            }
+                            Object defaultData = getTypeDefaultData(method, field.getType());
+                            item.append(fieldName).append(": ").append(defaultData).append("\n");
+                        }
                         break;
                     }
                 }
-            } else {
-                data = getDefaultData(type.getName());
+                return item.toString();
             }
         } else if (parameterType instanceof PsiPrimitiveType) {
             // int | char | boolean
             PsiPrimitiveType type = (PsiPrimitiveType) parameterType;
-            data = getDefaultData(type.getName());
+            return getDefaultData(type.getName());
         }
-        return data;
+        return null;
     }
 
     @Contract(pure = true)
@@ -366,80 +367,6 @@ public class RestUtil {
             return list;
         } else if (attributeValue instanceof JvmAnnotationClassValue) {
             return ((JvmAnnotationClassValue) attributeValue).getQualifiedName();
-        }
-        return null;
-    }
-
-    /**
-     * 获取扫描到的配置文件
-     *
-     * @param project project
-     * @param scope   scope
-     * @return {null | PropertiesFile | YAMLFile}
-     */
-    @Nullable
-    private static PsiFile getScanConfigurationFile(@NotNull Project project, @NotNull GlobalSearchScope scope) {
-        // Spring配置文件名前缀
-        final String configurationPrefix = "application";
-
-        // 配置文件全名
-        final String[] configurationFileNames = {
-                // properties file
-                configurationPrefix + "." + PropertiesFileType.DEFAULT_EXTENSION,
-                // yaml file
-                configurationPrefix + "." + YAMLFileType.DEFAULT_EXTENSION,
-        };
-
-        try {
-            for (String configurationFileName : configurationFileNames) {
-                PsiFile[] files = FilenameIndex.getFilesByName(project, configurationFileName, scope);
-
-                for (PsiFile file : files) {
-                    if (file instanceof PropertiesFile) {
-                        // application.properties
-                        return file;
-                    } else if (file instanceof YAMLFile) {
-                        // application.yml
-                        return file;
-                    }
-                }
-            }
-        } catch (NoClassDefFoundError e) {
-            DumbService.getInstance(project).showDumbModeNotification(String.format(
-                    "IDE is missing the corresponding package file: %s",
-                    e.getMessage()
-            ));
-        }
-        return null;
-    }
-
-    /**
-     * 获取properties或yaml文件的kv值
-     *
-     * @param conf PsiFile
-     * @param name name
-     * @return {value | null}
-     */
-    @Nullable
-    private static String getConfigurationValue(@Nullable PsiFile conf, @NotNull String name) {
-        if (conf == null) {
-            return null;
-        }
-        if (conf instanceof PropertiesFile) {
-            // application.properties
-            PropertiesFile propertiesFile = (PropertiesFile) conf;
-            return propertiesFile.getNamesMap().get(name);
-        } else if (conf instanceof YAMLFile) {
-            // application.yml
-            YAMLFile yamlFile = (YAMLFile) conf;
-
-            YAMLKeyValue server = YAMLUtil.getQualifiedKeyInFile(
-                    yamlFile,
-                    name.split("\\.")
-            );
-            if (server != null) {
-                return server.getValueText();
-            }
         }
         return null;
     }

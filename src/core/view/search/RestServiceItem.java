@@ -3,16 +3,13 @@ package core.view.search;
 import com.intellij.navigation.ItemPresentation;
 import com.intellij.navigation.NavigationItem;
 import com.intellij.openapi.module.Module;
-import com.intellij.openapi.project.Project;
 import com.intellij.pom.Navigatable;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiMethod;
 import com.intellij.psi.codeStyle.MinusculeMatcher;
 import com.intellij.psi.codeStyle.NameUtil;
-import com.intellij.psi.search.GlobalSearchScope;
 import core.beans.HttpMethod;
-import core.utils.RestUtil;
 import core.view.icon.Icons;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -31,7 +28,7 @@ public class RestServiceItem implements NavigationItem {
     private Module module;
     private HttpMethod method;
 
-    private String url;
+    private final String url;
 
     private Navigatable navigationElement;
 
@@ -150,29 +147,5 @@ public class RestServiceItem implements NavigationItem {
 
     public String getUrl() {
         return url;
-    }
-
-    public void setUrl(String url) {
-        this.url = url;
-    }
-
-    public String getFullUrl() {
-        if (this.psiMethod != null) {
-            Project project = this.psiMethod.getProject();
-            GlobalSearchScope scope = this.psiMethod.getResolveScope();
-
-            return RestUtil.getRequestUrl(
-                    RestUtil.scanListenerProtocol(project, scope),
-                    RestUtil.scanListenerPort(project, scope),
-                    RestUtil.scanContextPath(project, scope),
-                    getUrl()
-            );
-        }
-
-        return getUrl();
-    }
-
-    public PsiElement getPsiElement() {
-        return psiElement;
     }
 }

@@ -70,7 +70,7 @@ public class Request {
 
     public void setPath(@NotNull String path) {
         path = path.trim();
-        if (!path.startsWith("/")) {
+        if (!path.startsWith("/") && !path.contains("https") && !path.contains("http")) {
             path = "/" + path;
         }
         this.path = path;

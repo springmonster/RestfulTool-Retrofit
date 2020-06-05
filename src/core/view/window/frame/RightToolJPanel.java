@@ -4,7 +4,6 @@ import com.intellij.icons.AllIcons;
 import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.JBPopupMenu;
-import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.ui.TreeSpeedSearch;
 import com.intellij.ui.components.JBScrollPane;
 import com.intellij.util.ui.JBUI;
@@ -19,6 +18,10 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.Document;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
@@ -32,18 +35,28 @@ import java.util.concurrent.atomic.AtomicInteger;
 /**
  * @author ZhangYuanSheng
  */
-public class RightToolWindow extends JPanel {
+public class RightToolJPanel extends JPanel {
 
     /**
      * 项目对象
      */
     private final Project project;
-    private final RestDetail restDetail;
 
     /**
      * 按钮 - 扫描service
      */
     private JButton scanApi;
+
+    /**
+     * 文本 - base url
+     */
+    private JLabel baseUrlLabel;
+
+    /**
+     * 文本 - 输入base url
+     */
+    private JTextField baseUrl;
+
     /**
      * 树 - service列表
      */
@@ -52,16 +65,14 @@ public class RightToolWindow extends JPanel {
     /**
      * Create the panel.
      */
-    public RightToolWindow(@NotNull Project project) {
+    public RightToolJPanel(@NotNull Project project) {
         this.project = project;
-        this.restDetail = new RestDetail(project);
-        this.restDetail.setCallback(this::renderRequestTree);
 
         GridBagLayout gridBagLayout = new GridBagLayout();
         gridBagLayout.columnWidths = new int[]{0, 0};
-        gridBagLayout.rowHeights = new int[]{0, 0, 0};
+        gridBagLayout.rowHeights = new int[]{0, 0};
         gridBagLayout.columnWeights = new double[]{1.0, Double.MIN_VALUE};
-        gridBagLayout.rowWeights = new double[]{1.0, 1.0, Double.MIN_VALUE};
+        gridBagLayout.rowWeights = new double[]{1.0, Double.MIN_VALUE};
         setLayout(gridBagLayout);
 
         JPanel headPanel = new JPanel();
@@ -81,7 +92,6 @@ public class RightToolWindow extends JPanel {
         gbcBodyPanel.fill = GridBagConstraints.BOTH;
         gbcBodyPanel.gridx = 0;
         gbcBodyPanel.gridy = 1;
-        add(restDetail, gbcBodyPanel);
 
         initEvent();
 
@@ -93,6 +103,14 @@ public class RightToolWindow extends JPanel {
         headPanel.add(toolPanel, BorderLayout.NORTH);
         toolPanel.setLayout(new BorderLayout(0, 0));
 
+        baseUrlLabel = new JLabel("BASE URL");
+        toolPanel.add(baseUrlLabel, BorderLayout.WEST);
+
+        // 添加base url的文本输入框
+        baseUrl = new JTextField();
+        toolPanel.add(baseUrl, BorderLayout.CENTER);
+        baseUrl.setColumns(45);
+
         scanApi = new JXButton(AllIcons.Actions.Refresh);
         Dimension scanApiSize = new Dimension(24, 24);
         scanApi.setPreferredSize(scanApiSize);
@@ -100,7 +118,7 @@ public class RightToolWindow extends JPanel {
         scanApi.setContentAreaFilled(true);
         // 去掉按钮的边框
         scanApi.setBorderPainted(false);
-        toolPanel.add(scanApi, BorderLayout.WEST);
+        toolPanel.add(scanApi, BorderLayout.EAST);
 
         JScrollPane scrollPaneTree = new JBScrollPane();
         scrollPaneTree.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
@@ -138,7 +156,6 @@ public class RightToolWindow extends JPanel {
             if (node == null) {
                 return;
             }
-            restDetail.setRequest(node);
         });
 
         // RequestTree子项双击监听
@@ -188,6 +205,33 @@ public class RightToolWindow extends JPanel {
                 }
             }
         });
+
+        baseUrl.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                setBaseUrl(e);
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                setBaseUrl(e);
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                setBaseUrl(e);
+            }
+        });
+    }
+
+    private void setBaseUrl(DocumentEvent e) {
+        try {
+            Document document = e.getDocument();
+            String text = document.getText(0, document.getLength());
+            RestUtil.setBaseUrl(text);
+        } catch (BadLocationException badLocationException) {
+            badLocationException.printStackTrace();
+        }
     }
 
     private void firstLoad() {
@@ -275,20 +319,12 @@ public class RightToolWindow extends JPanel {
         JBPopupMenu menu = new JBPopupMenu();
         ActionListener actionListener = actionEvent -> {
             String copy;
-            GlobalSearchScope scope = request.getDartComponent().getResolveScope();
-            String contextPath = RestUtil.scanContextPath(project, scope);
             switch (((JMenuItem) actionEvent.getSource()).getMnemonic()) {
                 case 0:
                     copy = RestUtil.getRequestUrl(
-                            RestUtil.scanListenerProtocol(project, scope),
-                            RestUtil.scanListenerPort(project, scope),
-                            contextPath,
+                            RestUtil.getBaseUrl(),
                             request.getPath()
                     );
-                    break;
-                case 1:
-                    copy = (contextPath == null || "null".equals(contextPath) ? "" : contextPath) +
-                            request.getPath();
                     break;
                 default:
                     return;
@@ -301,12 +337,6 @@ public class RightToolWindow extends JPanel {
         copyFullUrl.setMnemonic(0);
         copyFullUrl.addActionListener(actionListener);
         menu.add(copyFullUrl);
-
-        // Copy api path
-        JMenuItem copyApiPath = new JMenuItem("Copy api path", AllIcons.Actions.Copy);
-        copyApiPath.setMnemonic(1);
-        copyApiPath.addActionListener(actionListener);
-        menu.add(copyApiPath);
 
         menu.show(tree, x, y);
     }
