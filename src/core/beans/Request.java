@@ -43,10 +43,6 @@ public class Request {
         }
     }
 
-    public HttpMethod getMethod() {
-        return method;
-    }
-
     public void setMethod(HttpMethod method) {
         this.method = method;
         this.icon = Icons.getMethodIcon(method);
