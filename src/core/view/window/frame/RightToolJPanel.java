@@ -57,7 +57,7 @@ public class RightToolJPanel extends JPanel {
     /**
      * 文本 - 输入base url
      */
-    private JTextField baseUrl;
+    private JTextField baseUrlTextField;
 
     /**
      * 树 - service列表
@@ -109,9 +109,9 @@ public class RightToolJPanel extends JPanel {
         toolPanel.add(baseUrlLabel, BorderLayout.WEST);
 
         // 添加base url的文本输入框
-        baseUrl = new JTextField();
-        toolPanel.add(baseUrl, BorderLayout.CENTER);
-        baseUrl.setColumns(45);
+        baseUrlTextField = new JTextField();
+        toolPanel.add(baseUrlTextField, BorderLayout.CENTER);
+        baseUrlTextField.setColumns(45);
 
         scanApi = new JXButton(AllIcons.Actions.Refresh);
         Dimension scanApiSize = new Dimension(24, 24);
@@ -188,25 +188,25 @@ public class RightToolJPanel extends JPanel {
         });
 
         // 设置base url
-        baseUrl.getDocument().addDocumentListener(new DocumentListener() {
+        baseUrlTextField.getDocument().addDocumentListener(new DocumentListener() {
             @Override
             public void insertUpdate(DocumentEvent e) {
-                setBaseUrl(e);
+                setBaseUrlTextField(e);
             }
 
             @Override
             public void removeUpdate(DocumentEvent e) {
-                setBaseUrl(e);
+                setBaseUrlTextField(e);
             }
 
             @Override
             public void changedUpdate(DocumentEvent e) {
-                setBaseUrl(e);
+                setBaseUrlTextField(e);
             }
         });
     }
 
-    private void setBaseUrl(DocumentEvent e) {
+    private void setBaseUrlTextField(DocumentEvent e) {
         try {
             Document document = e.getDocument();
             String text = document.getText(0, document.getLength());

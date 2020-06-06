@@ -12,7 +12,6 @@ package core.view.icon;
 
 import com.intellij.ui.IconManager;
 import core.beans.HttpMethod;
-import core.view.icon.impl.DefaultIcon;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -38,8 +37,6 @@ public class Icons {
      */
     @NotNull
     public static Icon getMethodIcon(HttpMethod method) {
-        String iconTypeClass = IconTypeManager.formatClass(DefaultIcon.class);
-        IconType iconType = IconTypeManager.getInstance(iconTypeClass);
-        return iconType.getDefaultIcon(method);
+        return IconTypeManager.getInstance().getDefaultIcon(method);
     }
 }

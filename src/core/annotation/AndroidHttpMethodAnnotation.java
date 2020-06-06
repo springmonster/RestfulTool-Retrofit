@@ -36,11 +36,7 @@ public enum AndroidHttpMethodAnnotation {
     /**
      * HeadMapping
      */
-    HEAD_MAPPING("retrofit2.http.HEAD", HttpMethod.HEAD),
-    /**
-     * RequestParam
-     */
-    REQUEST_PARAM("retrofit2.http.BODY", null);
+    HEAD_MAPPING("retrofit2.http.HEAD", HttpMethod.HEAD);
 
     private final String qualifiedName;
     private final HttpMethod method;
