@@ -7,3 +7,6 @@
 4. 支持 Flutter Retrofit -- Dart;<br>
 ## How to install
 Open Android Studio -> Preferences -> Plugins -> Install Plugin from Disk -> RestfulToolForAndroidAndFlutter.jar
+## ScreenShot
+[ScreenShot1](https://github.com/springmonster/RestfulTool-Retrofit/blob/AndroidAndFlutter/screenshot/ScreenShot1.jpeg)
+[ScreenShot2](https://github.com/springmonster/RestfulTool-Retrofit/blob/AndroidAndFlutter/screenshot/ScreenShot2.jpeg)
