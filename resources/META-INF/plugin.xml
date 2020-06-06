@@ -1,8 +1,8 @@
 <idea-plugin>
-    <id>cn.hccn.auto.restful.tool</id>
+    <id>com.khch.restful.tool</id>
     <name>RestfulTool Flutter</name>
     <version>1</version>
-    <vendor email="609779612@qq.com" url="">Charles.Kuang</vendor>
+    <vendor email="609779612@qq.com" url="">KuangHaochuan</vendor>
 
 
     <!--suppress PluginXmlValidity -->
@@ -10,14 +10,13 @@
       一套 Restful 服务开发辅助工具集。<br>
         1.提供了一个 Services tree 的显示窗口;<br>
         2.点击 URL 直接跳转到对应的方法定义;<br>
-        3.一个简单的 http 请求工具;<br>
-        4.支持 Android Retrofit;<br>
+        3.支持 Flutter Retrofit;<br>
     ]]></description>
 
     <!--suppress PluginXmlValidity -->
     <change-notes><![CDATA[
       <ul>
-        <li> 优化项目结构，为后续增加图标主题节省精力 </li>
+        <li> 优化项目结构 </li>
       </ul>
     ]]>
     </change-notes>

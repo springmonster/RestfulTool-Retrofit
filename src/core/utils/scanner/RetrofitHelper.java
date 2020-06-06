@@ -34,6 +34,7 @@ import java.util.List;
  * @version 1.0
  */
 public class RetrofitHelper {
+    private static final String REST_API = "@RestApi()";
 
     @NotNull
     public static List<Request> getRetrofitRequestByModule(@NotNull Project project, @NotNull Module module) {
@@ -53,18 +54,15 @@ public class RetrofitHelper {
             String text = psiFile.getText();
 
 
-            if (text.contains("@RestApi()")) {
+            if (text.contains(REST_API)) {
                 DartClass dartClass = PsiTreeUtil.findChildOfType(psiFile, DartClass.class);
                 List<DartComponent> methods = dartClass.getMethods();
 
 
-                for (int i = 0; i < methods.size(); i++) {
-                    DartComponent dartComponent = methods.get(i);
+                for (DartComponent dartComponent : methods) {
                     List<DartMetadata> metadataList = dartComponent.getMetadataList();
 
-                    for (int j = 0; j < metadataList.size(); j++) {
-                        DartMetadata dartMetadata = metadataList.get(j);
-
+                    for (DartMetadata dartMetadata : metadataList) {
                         String httpMethod = dartMetadata.getFirstChild().getNextSibling().getText();
 
                         FlutterHttpMethodAnnotation byQualifiedName = FlutterHttpMethodAnnotation.getByQualifiedName(httpMethod);

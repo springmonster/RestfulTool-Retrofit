@@ -16,7 +16,6 @@ import com.intellij.openapi.project.Project;
 import com.intellij.psi.search.GlobalSearchScope;
 import core.beans.Request;
 import core.utils.scanner.RetrofitHelper;
-import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collections;
@@ -38,24 +37,6 @@ public class RestUtil {
 
     public static String getBaseUrl() {
         return BASE_URL;
-    }
-
-    @NotNull
-    @Contract(pure = true)
-    public static Map<String, String> tempDataCoverToMap(String tempData) {
-        Map<String, String> map = new HashMap<>();
-
-        if (tempData != null && !"".equals((tempData = tempData.trim()))) {
-            String[] items = tempData.split("\n");
-            for (String item : items) {
-                String[] data = item.split(":");
-                if (data.length == 2) {
-                    map.put(data[0].trim(), data[1].trim());
-                }
-            }
-        }
-
-        return map;
     }
 
     /**
