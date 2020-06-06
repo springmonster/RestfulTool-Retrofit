@@ -6,8 +6,8 @@ import com.intellij.openapi.wm.ToolWindow;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * @author ZhangYuanSheng
  * @version 1.0
+ * @Author KuangHaochuan
  */
 public interface RestfulToolService {
 

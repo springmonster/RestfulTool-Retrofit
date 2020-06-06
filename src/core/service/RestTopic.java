@@ -4,8 +4,8 @@ import com.intellij.util.messages.Topic;
 import org.jetbrains.annotations.Nullable;
 
 /**
- * @author ZhangYuanSheng
  * @version 1.0
+ * @Author KuangHaochuan
  */
 public interface RestTopic {
 

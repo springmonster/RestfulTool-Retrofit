@@ -9,8 +9,8 @@ import core.view.window.frame.RightToolJPanel;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * @author ZhangYuanSheng
  * @version 1.0
+ * @Author KuangHaochuan
  */
 public class RestfulToolServiceImpl implements RestfulToolService {
 

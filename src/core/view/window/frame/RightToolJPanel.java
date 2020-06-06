@@ -35,7 +35,7 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
- * @author ZhangYuanSheng
+ * @Author KuangHaochuan
  */
 public class RightToolJPanel extends JPanel {
 

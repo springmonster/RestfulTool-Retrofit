@@ -11,8 +11,8 @@
 package core.beans;
 
 /**
- * @author ZhangYuanSheng
  * @version 1.0
+ * @Author KuangHaochuan
  */
 public enum HttpMethod {
 

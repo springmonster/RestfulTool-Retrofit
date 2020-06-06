@@ -30,10 +30,10 @@ import java.util.Collection;
 import java.util.List;
 
 /**
- * @author Charles.Kuang
+ * @author KuangHaochuan
  * @version 1.0
  */
-public class RetrofitHelper {
+public class RetrofitHelperForFlutter {
     private static final String REST_API = "@RestApi()";
 
     @NotNull

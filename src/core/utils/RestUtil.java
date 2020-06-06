@@ -10,21 +10,24 @@
  */
 package core.utils;
 
+import com.intellij.lang.jvm.annotation.*;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.project.Project;
+import com.intellij.psi.PsiExpression;
+import com.intellij.psi.search.GlobalSearchScope;
 import core.beans.Request;
-import core.utils.scanner.RetrofitHelper;
+import core.utils.scanner.RetrofitHelperForAndroid;
+import core.utils.scanner.RetrofitHelperForFlutter;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.lang.reflect.Field;
+import java.util.*;
 
 /**
- * @author ZhangYuanSheng
  * @version 1.0
+ * @Author KuangHaochuan
  */
 public class RestUtil {
 
@@ -36,6 +39,10 @@ public class RestUtil {
 
     public static String getBaseUrl() {
         return BASE_URL;
+    }
+
+    public static GlobalSearchScope getModuleScope(@NotNull Module module) {
+        return module.getModuleScope();
     }
 
     /**
@@ -81,9 +88,15 @@ public class RestUtil {
     @NotNull
     public static List<Request> getAllRequestByModule(@NotNull Project project, @NotNull Module module) {
         // Retrofit RESTFul方式
-        List<Request> retrofitRequestByModule = RetrofitHelper.getRetrofitRequestByModule(project, module);
-        if (!retrofitRequestByModule.isEmpty()) {
-            return retrofitRequestByModule;
+        List<Request> retrofitRequestByModuleForAndroid = RetrofitHelperForAndroid.getRetrofitRequestByModule(project, module);
+        if (!retrofitRequestByModuleForAndroid.isEmpty()) {
+            return retrofitRequestByModuleForAndroid;
+        }
+
+        // Retrofit RESTFul方式
+        List<Request> retrofitRequestByModuleForFlutter = RetrofitHelperForFlutter.getRetrofitRequestByModule(project, module);
+        if (!retrofitRequestByModuleForFlutter.isEmpty()) {
+            return retrofitRequestByModuleForFlutter;
         }
         return Collections.emptyList();
     }
@@ -107,4 +120,49 @@ public class RestUtil {
         url.append(path);
         return url.toString();
     }
+
+    /**
+     * 获取属性值
+     *
+     * @param attributeValue Psi属性
+     * @return {Object | List}
+     */
+    @Nullable
+    public static Object getAttributeValue(JvmAnnotationAttributeValue attributeValue) {
+        if (attributeValue == null) {
+            return null;
+        }
+        if (attributeValue instanceof JvmAnnotationConstantValue) {
+            return ((JvmAnnotationConstantValue) attributeValue).getConstantValue();
+        } else if (attributeValue instanceof JvmAnnotationEnumFieldValue) {
+            return ((JvmAnnotationEnumFieldValue) attributeValue).getFieldName();
+        } else if (attributeValue instanceof JvmAnnotationArrayValue) {
+            List<JvmAnnotationAttributeValue> values = ((JvmAnnotationArrayValue) attributeValue).getValues();
+            List<Object> list = new ArrayList<>(values.size());
+            for (JvmAnnotationAttributeValue value : values) {
+                Object o = getAttributeValue(value);
+                if (o != null) {
+                    list.add(o);
+                } else {
+                    // 如果是jar包里的JvmAnnotationConstantValue则无法正常获取值
+                    try {
+                        Class<? extends JvmAnnotationAttributeValue> clazz = value.getClass();
+                        Field myElement = clazz.getSuperclass().getDeclaredField("myElement");
+                        myElement.setAccessible(true);
+                        Object elObj = myElement.get(value);
+                        if (elObj instanceof PsiExpression) {
+                            PsiExpression expression = (PsiExpression) elObj;
+                            list.add(expression.getText());
+                        }
+                    } catch (Exception ignore) {
+                    }
+                }
+            }
+            return list;
+        } else if (attributeValue instanceof JvmAnnotationClassValue) {
+            return ((JvmAnnotationClassValue) attributeValue).getQualifiedName();
+        }
+        return null;
+    }
+
 }

@@ -10,6 +10,7 @@
  */
 package core.beans;
 
+import com.intellij.psi.PsiMethod;
 import com.jetbrains.lang.dart.psi.DartComponent;
 import core.view.icon.Icons;
 import org.jetbrains.annotations.NotNull;
@@ -18,8 +19,8 @@ import org.jetbrains.annotations.Nullable;
 import javax.swing.*;
 
 /**
- * @author ZhangYuanSheng
  * @version 1.0
+ * @Author KuangHaochuan
  */
 public class Request {
 
@@ -27,7 +28,16 @@ public class Request {
     private String path;
     private Icon icon;
 
-    private final DartComponent dartComponent;
+    private PsiMethod psiMethod;
+    private DartComponent dartComponent;
+
+    public Request(HttpMethod method, @Nullable String path, @Nullable PsiMethod psiMethod) {
+        this.setMethod(method);
+        if (path != null) {
+            this.setPath(path);
+        }
+        this.psiMethod = psiMethod;
+    }
 
     public Request(HttpMethod method, @Nullable String path, @Nullable DartComponent dartComponent) {
         this.setMethod(method);
@@ -38,6 +48,9 @@ public class Request {
     }
 
     public void navigate(boolean requestFocus) {
+        if (psiMethod != null) {
+            psiMethod.navigate(requestFocus);
+        }
         if (dartComponent != null) {
             dartComponent.navigate(requestFocus);
         }

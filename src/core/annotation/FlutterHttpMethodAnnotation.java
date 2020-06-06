@@ -4,7 +4,7 @@ import core.beans.HttpMethod;
 import org.jetbrains.annotations.Nullable;
 
 /**
- * @author Charles.Kuang
+ * @author KuangHaochuan
  */
 public enum FlutterHttpMethodAnnotation {
 

@@ -17,8 +17,8 @@ import core.service.RestfulToolService;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * @author ZhangYuanSheng
  * @version 1.0
+ * @Author KuangHaochuan
  */
 public class RestfulToolWindowFactory implements ToolWindowFactory {
 

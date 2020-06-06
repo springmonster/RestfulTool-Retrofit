@@ -16,8 +16,8 @@ import org.jetbrains.annotations.NotNull;
 import javax.swing.*;
 
 /**
- * @author ZhangYuanSheng
  * @version 1.0
+ * @Author KuangHaochuan
  */
 public interface IconType {
 

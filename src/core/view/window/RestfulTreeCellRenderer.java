@@ -21,8 +21,8 @@ import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 
 /**
- * @author ZhangYuanSheng
  * @version 1.0
+ * @Author KuangHaochuan
  */
 public class RestfulTreeCellRenderer extends ColoredTreeCellRenderer {
 
