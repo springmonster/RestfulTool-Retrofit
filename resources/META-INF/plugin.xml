@@ -1,7 +1,7 @@
 <idea-plugin>
     <id>com.khch.restful.tool</id>
     <name>RestfulTool Flutter</name>
-    <version>1</version>
+    <version>1.0</version>
     <vendor email="609779612@qq.com" url="">KuangHaochuan</vendor>
 
 
