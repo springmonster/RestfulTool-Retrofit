@@ -38,15 +38,8 @@ public class Icons {
      */
     @NotNull
     public static Icon getMethodIcon(HttpMethod method) {
-        return getMethodIcon(method, false);
-    }
-
-    public static Icon getMethodIcon(HttpMethod method, boolean selected) {
         String iconTypeClass = IconTypeManager.formatClass(DefaultIcon.class);
         IconType iconType = IconTypeManager.getInstance(iconTypeClass);
-        if (selected) {
-            return iconType.getSelectIcon(method);
-        }
         return iconType.getDefaultIcon(method);
     }
 }

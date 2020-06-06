@@ -52,19 +52,6 @@ public class IconTypeManager {
         }
     }
 
-    /**
-     * 获取图标风格列表
-     *
-     * @return array
-     */
-    @NotNull
-    @Contract(value = " -> new", pure = true)
-    public static IconType[] getIconTypes() {
-        return new IconType[]{
-                IconTypeManager.getInstance(DefaultIcon.class)
-        };
-    }
-
     @NotNull
     public static Class<? extends IconType> formatName(@NotNull String className) {
         try {

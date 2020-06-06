@@ -53,7 +53,6 @@ public class RetrofitHelper {
 
             String text = psiFile.getText();
 
-
             if (text.contains(REST_API)) {
                 DartClass dartClass = PsiTreeUtil.findChildOfType(psiFile, DartClass.class);
                 List<DartComponent> methods = dartClass.getMethods();

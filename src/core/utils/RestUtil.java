@@ -13,7 +13,6 @@ package core.utils;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.project.Project;
-import com.intellij.psi.search.GlobalSearchScope;
 import core.beans.Request;
 import core.utils.scanner.RetrofitHelper;
 import org.jetbrains.annotations.NotNull;
@@ -107,9 +106,5 @@ public class RestUtil {
         }
         url.append(path);
         return url.toString();
-    }
-
-    public static GlobalSearchScope getModuleScope(@NotNull Module module) {
-        return module.getModuleScope();
     }
 }

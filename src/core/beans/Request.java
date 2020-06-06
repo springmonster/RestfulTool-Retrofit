@@ -37,10 +37,6 @@ public class Request {
         this.dartComponent = dartComponent;
     }
 
-    public DartComponent getDartComponent() {
-        return dartComponent;
-    }
-
     public void navigate(boolean requestFocus) {
         if (dartComponent != null) {
             dartComponent.navigate(requestFocus);
@@ -61,7 +57,7 @@ public class Request {
     }
 
     public Icon getSelectIcon() {
-        return Icons.getMethodIcon(this.method, true);
+        return Icons.getMethodIcon(this.method);
     }
 
     public String getPath() {
@@ -74,17 +70,6 @@ public class Request {
             path = "/" + path;
         }
         this.path = path;
-    }
-
-    public void setParent(@NotNull Request parent) {
-        if (this.method == null && parent.getMethod() != null) {
-            this.setMethod(parent.getMethod());
-        }
-        String parentPath = parent.getPath();
-        if (parentPath != null && parentPath.endsWith("/")) {
-            parentPath = "";
-        }
-        this.setPath(parentPath + this.path);
     }
 
     @Override

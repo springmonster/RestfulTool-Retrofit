@@ -13,13 +13,10 @@ package core.view.icon.impl;
 import core.beans.HttpMethod;
 import core.view.icon.IconType;
 import core.view.icon.Icons;
-import core.view.icon.PreviewIcon;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -51,26 +48,6 @@ public class DefaultIcon implements IconType {
     @Override
     public Icon getDefaultIcon(HttpMethod method) {
         return ICONS.get(method);
-    }
-
-    @NotNull
-    @Override
-    public Icon getSelectIcon(HttpMethod method) {
-        return this.getDefaultIcon(method);
-    }
-
-    @NotNull
-    @Override
-    public List<PreviewIcon> getDefaultIcons() {
-        List<PreviewIcon> list = new ArrayList<>(ICONS.size());
-        ICONS.forEach((method, icon) -> list.add(new PreviewIcon(method.name(), icon)));
-        return list;
-    }
-
-    @NotNull
-    @Override
-    public List<PreviewIcon> getSelectIcons() {
-        return this.getDefaultIcons();
     }
 
     @NotNull

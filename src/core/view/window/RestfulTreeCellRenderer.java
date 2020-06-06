@@ -36,7 +36,6 @@ public class RestfulTreeCellRenderer extends ColoredTreeCellRenderer {
         Object obj = ((DefaultMutableTreeNode) value).getUserObject();
         if (obj instanceof Request) {
             Request node = (Request) obj;
-
             setMethodTypeAndPath(node, selected);
         } else if (obj instanceof String) {
             append((String) obj, SimpleTextAttributes.GRAYED_BOLD_ATTRIBUTES);
