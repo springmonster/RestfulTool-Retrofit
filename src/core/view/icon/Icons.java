@@ -12,7 +12,7 @@ package core.view.icon;
 
 import com.intellij.ui.IconManager;
 import core.beans.HttpMethod;
-import core.configuration.AppSettingsState;
+import core.view.icon.impl.DefaultIcon;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -42,7 +42,7 @@ public class Icons {
     }
 
     public static Icon getMethodIcon(HttpMethod method, boolean selected) {
-        String iconTypeClass = AppSettingsState.getInstance().getAppSetting().iconTypeClass;
+        String iconTypeClass = IconTypeManager.formatClass(DefaultIcon.class);
         IconType iconType = IconTypeManager.getInstance(iconTypeClass);
         if (selected) {
             return iconType.getSelectIcon(method);

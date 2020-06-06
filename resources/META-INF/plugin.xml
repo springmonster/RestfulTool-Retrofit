@@ -30,12 +30,6 @@
     <depends>Dart</depends>
 
     <extensions defaultExtensionNs="com.intellij">
-        <applicationService serviceImplementation="core.configuration.AppSettingsState"/>
-
-        <applicationConfigurable parentId="tools"
-                                 instance="core.configuration.AppSettingsConfigurable"
-                                 id="core.configuration.AppSettingsConfigurable"
-                                 displayName="Restful Tool"/>
 
         <projectService serviceInterface="core.service.RestfulToolService"
                         serviceImplementation="core.service.impl.RestfulToolServiceImpl"/>
