@@ -26,7 +26,9 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.Map;
@@ -150,14 +152,6 @@ public class RightToolJPanel extends JPanel {
             }
         });
 
-        // RequestTree子项点击监听
-        tree.addTreeSelectionListener(e -> {
-            Request node = getTreeNodeRequest(tree);
-            if (node == null) {
-                return;
-            }
-        });
-
         // RequestTree子项双击监听
         tree.addMouseListener(new MouseAdapter() {
             @Override
@@ -192,20 +186,8 @@ public class RightToolJPanel extends JPanel {
                 }
             }
         });
-        // 按回车键跳转到对应方法
-        tree.addKeyListener(new KeyAdapter() {
-            @Override
-            public void keyPressed(KeyEvent e) {
-                super.keyPressed(e);
-                if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-                    Request request = getTreeNodeRequest(tree);
-                    if (request != null) {
-                        request.navigate(true);
-                    }
-                }
-            }
-        });
 
+        // 设置base url
         baseUrl.getDocument().addDocumentListener(new DocumentListener() {
             @Override
             public void insertUpdate(DocumentEvent e) {
@@ -319,15 +301,13 @@ public class RightToolJPanel extends JPanel {
         JBPopupMenu menu = new JBPopupMenu();
         ActionListener actionListener = actionEvent -> {
             String copy;
-            switch (((JMenuItem) actionEvent.getSource()).getMnemonic()) {
-                case 0:
-                    copy = RestUtil.getRequestUrl(
-                            RestUtil.getBaseUrl(),
-                            request.getPath()
-                    );
-                    break;
-                default:
-                    return;
+            if (((JMenuItem) actionEvent.getSource()).getMnemonic() == 0) {
+                copy = RestUtil.getRequestUrl(
+                        RestUtil.getBaseUrl(),
+                        request.getPath()
+                );
+            } else {
+                return;
             }
             SystemUtil.setClipboardString(copy);
         };

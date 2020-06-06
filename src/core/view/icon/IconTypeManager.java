@@ -11,7 +11,6 @@
 package core.view.icon;
 
 import core.view.icon.impl.DefaultIcon;
-import core.view.icon.impl.CuteIcon;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
@@ -62,8 +61,7 @@ public class IconTypeManager {
     @Contract(value = " -> new", pure = true)
     public static IconType[] getIconTypes() {
         return new IconType[]{
-                IconTypeManager.getInstance(DefaultIcon.class),
-                IconTypeManager.getInstance(CuteIcon.class),
+                IconTypeManager.getInstance(DefaultIcon.class)
         };
     }
 

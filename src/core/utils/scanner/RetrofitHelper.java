@@ -13,11 +13,8 @@ package core.utils.scanner;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiElement;
-import com.intellij.psi.impl.java.stubs.index.JavaShortClassNameIndex;
 import com.intellij.psi.search.FilenameIndex;
-import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.psi.util.PsiUtilBase;
 import com.jetbrains.lang.dart.psi.DartClass;
@@ -26,12 +23,9 @@ import com.jetbrains.lang.dart.psi.DartFile;
 import com.jetbrains.lang.dart.psi.DartMetadata;
 import core.annotation.FlutterHttpMethodAnnotation;
 import core.beans.Request;
-import core.utils.RestUtil;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.kotlin.idea.caches.KotlinShortNamesCache;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
@@ -44,59 +38,6 @@ public class RetrofitHelper {
     @NotNull
     public static List<Request> getRetrofitRequestByModule(@NotNull Project project, @NotNull Module module) {
         return getAllRetrofitDartClass(project, module);
-    }
-
-    /**
-     * 获取所有的Retrofit Java
-     *
-     * @param project project
-     * @param module  module
-     * @return Collection<PsiClass>
-     */
-    @NotNull
-    private static List<PsiClass> getAllRetrofitJavaClass(@NotNull Project project, @NotNull Module module) {
-        GlobalSearchScope moduleScope = RestUtil.getModuleScope(module);
-
-        List<PsiClass> psiClasses = new ArrayList<>();
-
-        Collection<VirtualFile> virtualFiles = FilenameIndex.getAllFilesByExt(project, "java", moduleScope);
-
-        virtualFiles.forEach(virtualFile -> {
-            List<PsiClass> psiClassList = (List<PsiClass>) JavaShortClassNameIndex.getInstance().get(virtualFile.getNameWithoutExtension(), project, moduleScope);
-            if (psiClassList != null && !psiClassList.isEmpty() && psiClassList.get(0).isInterface()) {
-                psiClasses.add(psiClassList.get(0));
-                System.out.println(psiClassList.get(0));
-            }
-        });
-
-        return psiClasses;
-    }
-
-    /**
-     * 获取所有的Retrofit Kotlin
-     *
-     * @param project project
-     * @param module  module
-     * @return Collection<PsiClass>
-     */
-    @NotNull
-    private static List<PsiClass> getAllRetrofitKotlinClass(@NotNull Project project, @NotNull Module module) {
-        GlobalSearchScope moduleScope = RestUtil.getModuleScope(module);
-
-        List<PsiClass> psiClassList = new ArrayList<>();
-
-        Collection<VirtualFile> virtualFiles = FilenameIndex.getAllFilesByExt(project, "kt", moduleScope);
-
-        virtualFiles.forEach(virtualFile -> {
-            PsiClass[] psiClasses = KotlinShortNamesCache.getInstance(project).getClassesByName(virtualFile.getNameWithoutExtension(), moduleScope);
-            List<PsiClass> classList = Arrays.asList(psiClasses);
-            if (!classList.isEmpty() && classList.get(0).isInterface()) {
-                psiClassList.add(classList.get(0));
-                System.out.println(classList.get(0));
-            }
-        });
-
-        return psiClassList;
     }
 
     @NotNull
@@ -135,17 +76,12 @@ public class RetrofitHelper {
                         PsiElement lastChild = dartMetadata.getLastChild();
                         String path = lastChild.getText().substring(2, lastChild.getTextLength() - 2);
 
-                        System.out.println(httpMethod);
-                        System.out.println(path);
-                        System.out.println("------------");
-
                         requests.add(new Request(
                                 byQualifiedName.getMethod(),
                                 path,
                                 dartComponent
                         ));
                     }
-                    System.out.println("1111 " + methods.get(i).getName());
                 }
             }
         });

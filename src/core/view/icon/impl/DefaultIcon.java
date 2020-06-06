@@ -11,13 +11,16 @@
 package core.view.icon.impl;
 
 import core.beans.HttpMethod;
-import core.view.icon.Icons;
 import core.view.icon.IconType;
+import core.view.icon.Icons;
 import core.view.icon.PreviewIcon;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author ZhangYuanSheng
@@ -25,7 +28,6 @@ import java.util.*;
  */
 public class DefaultIcon implements IconType {
 
-    public static final Icon REQUEST = Icons.load("/icons/method/default/Request.png");
     public static final Icon GET = Icons.load("/icons/method/default/GET.png");
     public static final Icon POST = Icons.load("/icons/method/default/POST.png");
     public static final Icon DELETE = Icons.load("/icons/method/default/DELETE.png");
@@ -37,7 +39,6 @@ public class DefaultIcon implements IconType {
 
     static {
         ICONS = new HashMap<>(HttpMethod.values().length);
-        ICONS.put(HttpMethod.REQUEST, REQUEST);
         ICONS.put(HttpMethod.GET, GET);
         ICONS.put(HttpMethod.POST, POST);
         ICONS.put(HttpMethod.DELETE, DELETE);

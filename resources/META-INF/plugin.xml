@@ -41,20 +41,9 @@
         <projectService serviceInterface="core.service.RestfulToolService"
                         serviceImplementation="core.service.impl.RestfulToolServiceImpl"/>
 
-        <projectService serviceImplementation="core.view.search.GotoRequestConfiguration"/>
-
         <toolWindow id="RestfulTool" anchor="right"
                     factoryClass="core.view.window.RestfulToolWindowFactory" order="last"
                     icon="/icons/service.png"/>
     </extensions>
-
-    <actions>
-        <action id="Tool.GotoRequestService" class="core.view.search.GotoRequestAction"
-                text="Request _Service" description="Goto request service"
-                icon="AllIcons.Actions.Search">
-            <add-to-group group-id="GoToTargetEx" anchor="first"/>
-            <keyboard-shortcut keymap="$default" first-keystroke="ctrl alt SLASH"/>
-        </action>
-    </actions>
 
 </idea-plugin>
