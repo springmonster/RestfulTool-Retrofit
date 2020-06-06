@@ -31,7 +31,7 @@ public class RetrofitHelperForAndroid {
 
     @NotNull
     public static List<Request> getRetrofitRequestByModule(@NotNull Project project, @NotNull Module module) {
-        List<Request> moduleList = new ArrayList<>(0);
+        List<Request> moduleList = new ArrayList<>();
 
         List<PsiClass> controllers = getAllRetrofitJavaClass(project, module);
         controllers.addAll(getAllRetrofitKotlinClass(project, module));
@@ -72,7 +72,6 @@ public class RetrofitHelperForAndroid {
             List<PsiClass> psiClassList = (List<PsiClass>) JavaShortClassNameIndex.getInstance().get(virtualFile.getNameWithoutExtension(), project, moduleScope);
             if (psiClassList != null && !psiClassList.isEmpty() && psiClassList.get(0).isInterface()) {
                 psiClasses.add(psiClassList.get(0));
-                System.out.println(psiClassList.get(0));
             }
         });
 
@@ -99,7 +98,6 @@ public class RetrofitHelperForAndroid {
             List<PsiClass> classList = Arrays.asList(psiClasses);
             if (!classList.isEmpty() && classList.get(0).isInterface()) {
                 psiClassList.add(classList.get(0));
-                System.out.println(classList.get(0));
             }
         });
 
@@ -157,7 +155,9 @@ public class RetrofitHelperForAndroid {
     @NotNull
     private static List<Request> getRequests(@NotNull PsiMethod method) {
         List<Request> requests = new ArrayList<>();
+
         PsiAnnotation[] annotations = method.getModifierList().getAnnotations();
+
         for (PsiAnnotation annotation : annotations) {
             requests.addAll(getRequests(annotation, method));
         }

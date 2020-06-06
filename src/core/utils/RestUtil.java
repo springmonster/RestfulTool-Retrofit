@@ -14,7 +14,6 @@ import com.intellij.lang.jvm.annotation.*;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.project.Project;
-import com.intellij.psi.PsiExpression;
 import com.intellij.psi.search.GlobalSearchScope;
 import core.beans.Request;
 import core.utils.scanner.RetrofitHelperForAndroid;
@@ -22,7 +21,6 @@ import core.utils.scanner.RetrofitHelperForFlutter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.lang.reflect.Field;
 import java.util.*;
 
 /**
@@ -87,13 +85,13 @@ public class RestUtil {
      */
     @NotNull
     public static List<Request> getAllRequestByModule(@NotNull Project project, @NotNull Module module) {
-        // Retrofit RESTFul方式
+        // Android Retrofit RESTFul方式
         List<Request> retrofitRequestByModuleForAndroid = RetrofitHelperForAndroid.getRetrofitRequestByModule(project, module);
         if (!retrofitRequestByModuleForAndroid.isEmpty()) {
             return retrofitRequestByModuleForAndroid;
         }
 
-        // Retrofit RESTFul方式
+        // Flutter  Retrofit RESTFul方式
         List<Request> retrofitRequestByModuleForFlutter = RetrofitHelperForFlutter.getRetrofitRequestByModule(project, module);
         if (!retrofitRequestByModuleForFlutter.isEmpty()) {
             return retrofitRequestByModuleForFlutter;
@@ -143,19 +141,6 @@ public class RestUtil {
                 Object o = getAttributeValue(value);
                 if (o != null) {
                     list.add(o);
-                } else {
-                    // 如果是jar包里的JvmAnnotationConstantValue则无法正常获取值
-                    try {
-                        Class<? extends JvmAnnotationAttributeValue> clazz = value.getClass();
-                        Field myElement = clazz.getSuperclass().getDeclaredField("myElement");
-                        myElement.setAccessible(true);
-                        Object elObj = myElement.get(value);
-                        if (elObj instanceof PsiExpression) {
-                            PsiExpression expression = (PsiExpression) elObj;
-                            list.add(expression.getText());
-                        }
-                    } catch (Exception ignore) {
-                    }
                 }
             }
             return list;
@@ -164,5 +149,4 @@ public class RestUtil {
         }
         return null;
     }
-
 }

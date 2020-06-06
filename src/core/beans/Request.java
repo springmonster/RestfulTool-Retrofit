@@ -65,10 +65,6 @@ public class Request {
         return icon;
     }
 
-    public Icon getSelectIcon() {
-        return Icons.getMethodIcon(this.method);
-    }
-
     public String getPath() {
         return path;
     }

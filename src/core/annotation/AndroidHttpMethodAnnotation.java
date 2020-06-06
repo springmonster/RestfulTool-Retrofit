@@ -8,35 +8,17 @@ import org.jetbrains.annotations.Nullable;
  */
 public enum AndroidHttpMethodAnnotation {
 
-    /**
-     * GetMapping
-     */
-    GET_MAPPING("retrofit2.http.GET", HttpMethod.GET),
+    HEAD("retrofit2.http.HEAD", HttpMethod.HEAD),
 
-    /**
-     * PostMapping
-     */
-    POST_MAPPING("retrofit2.http.POST", HttpMethod.POST),
+    GET("retrofit2.http.GET", HttpMethod.GET),
 
-    /**
-     * PutMapping
-     */
-    PUT_MAPPING("retrofit2.http.PUT", HttpMethod.PUT),
+    POST("retrofit2.http.POST", HttpMethod.POST),
 
-    /**
-     * DeleteMapping
-     */
-    DELETE_MAPPING("retrofit2.http.DELETE", HttpMethod.DELETE),
+    PUT("retrofit2.http.PUT", HttpMethod.PUT),
 
-    /**
-     * PatchMapping
-     */
-    PATCH_MAPPING("retrofit2.http.PATCH", HttpMethod.PATCH),
+    PATCH("retrofit2.http.PATCH", HttpMethod.PATCH),
 
-    /**
-     * HeadMapping
-     */
-    HEAD_MAPPING("retrofit2.http.HEAD", HttpMethod.HEAD);
+    DELETE("retrofit2.http.DELETE", HttpMethod.DELETE);
 
     private final String qualifiedName;
     private final HttpMethod method;

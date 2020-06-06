@@ -8,34 +8,16 @@ import org.jetbrains.annotations.Nullable;
  */
 public enum FlutterHttpMethodAnnotation {
 
-    /**
-     * GET
-     */
-    GET("GET", HttpMethod.GET),
-
-    /**
-     * POST
-     */
-    POST("POST", HttpMethod.POST),
-
-    /**
-     * PUT
-     */
-    PUT("PUT", HttpMethod.PUT),
-
-    /**
-     * PATCH
-     */
-    PATCH("PATCH", HttpMethod.PATCH),
-
-    /**
-     * HEAD
-     */
     HEAD("HEAD", HttpMethod.HEAD),
 
-    /**
-     * Delete
-     */
+    GET("GET", HttpMethod.GET),
+
+    POST("POST", HttpMethod.POST),
+
+    PUT("PUT", HttpMethod.PUT),
+
+    PATCH("PATCH", HttpMethod.PATCH),
+
     DELETE("DELETE", HttpMethod.DELETE);
 
     private final String qualifiedName;

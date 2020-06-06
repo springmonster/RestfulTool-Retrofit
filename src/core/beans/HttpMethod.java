@@ -16,33 +16,15 @@ package core.beans;
  */
 public enum HttpMethod {
 
-    /**
-     * GET
-     */
+    HEAD,
+
     GET,
 
-    /**
-     * POST
-     */
     POST,
 
-    /**
-     * PUT
-     */
     PUT,
 
-    /**
-     * DELETE
-     */
-    DELETE,
-
-    /**
-     * PATCH
-     */
     PATCH,
 
-    /**
-     * HEAD
-     */
-    HEAD
+    DELETE
 }
