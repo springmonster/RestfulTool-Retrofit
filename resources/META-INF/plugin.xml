@@ -1,12 +1,18 @@
 <idea-plugin>
     <id>com.khch.restful.tool</id>
     <name>RestfulTool Retrofit</name>
-    <version>1.0</version>
-    <vendor email="609779612@qq.com" url="">KuangHaochuan</vendor>
+    <version>1.1</version>
+    <vendor email="609779612@qq.com" url="609779612@qq.com">609779612@qq.com</vendor>
 
 
     <!--suppress PluginXmlValidity -->
     <description><![CDATA[
+      A set of auxiliary tools for Restful service development. <br>
+         1. Provide a service tree display window;<br>
+         2. Click the URL to jump directly to the corresponding method definition;<br>
+         3. Support Android Retrofit - Java and Kotlin;<br>
+         4. Support Flutter Retrofit - Dart;<br>
+      <br>
       一套 Restful 服务开发辅助工具集。<br>
         1.提供了一个 Services tree 的显示窗口;<br>
         2.点击 URL 直接跳转到对应的方法定义;<br>
@@ -17,7 +23,7 @@
     <!--suppress PluginXmlValidity -->
     <change-notes><![CDATA[
       <ul>
-        <li> 优化项目结构 </li>
+        <li> Optimize project structure </li>
       </ul>
     ]]>
     </change-notes>
