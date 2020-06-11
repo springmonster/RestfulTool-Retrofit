@@ -3,13 +3,10 @@
  */
 package core.utils.scanner;
 
-import com.intellij.lang.jvm.annotation.JvmAnnotationAttribute;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.psi.PsiAnnotation;
-import com.intellij.psi.PsiClass;
-import com.intellij.psi.PsiMethod;
+import com.intellij.psi.*;
 import com.intellij.psi.impl.java.stubs.index.JavaShortClassNameIndex;
 import com.intellij.psi.search.FilenameIndex;
 import com.intellij.psi.search.GlobalSearchScope;
@@ -121,19 +118,11 @@ public class RetrofitHelperForAndroid {
         }
         Set<HttpMethod> methods = new HashSet<>();
         methods.add(androidHttpMethodAnnotation.getMethod());
-        List<String> paths = new ArrayList<>();
 
-        List<JvmAnnotationAttribute> attributes = annotation.getAttributes();
-        for (JvmAnnotationAttribute attribute : attributes) {
-            Object value = RestUtil.getAttributeValue(attribute.getAttributeValue());
-            if (value instanceof String) {
-                paths.add(((String) value));
-            }
-        }
+        List<String> values = getAnnotationAttributeValues(annotation, "value");
+        List<Request> requests = new ArrayList<>(values.size());
 
-        List<Request> requests = new ArrayList<>(paths.size());
-
-        paths.forEach(path -> {
+        values.forEach(path -> {
             for (HttpMethod method : methods) {
                 requests.add(new Request(
                         method,
@@ -145,6 +134,29 @@ public class RetrofitHelperForAndroid {
         return requests;
     }
 
+    public static List<String> getAnnotationAttributeValues(PsiAnnotation annotation, String attr) {
+        PsiAnnotationMemberValue value = annotation.findDeclaredAttributeValue(attr);
+
+        List<String> values = new ArrayList<>();
+        //只有注解
+        //一个值 class com.intellij.psi.impl.source.tree.java.PsiLiteralExpressionImpl
+        //多个值  class com.intellij.psi.impl.source.tree.java.PsiArrayInitializerMemberValueImpl
+        if (value instanceof PsiReferenceExpression) {
+            PsiReferenceExpression expression = (PsiReferenceExpression) value;
+            values.add(expression.getText());
+        } else if (value instanceof PsiLiteralExpression) {
+//            values.add(psiNameValuePair.getLiteralValue());
+            values.add(((PsiLiteralExpression) value).getValue().toString());
+        } else if (value instanceof PsiArrayInitializerMemberValue) {
+            PsiAnnotationMemberValue[] initializers = ((PsiArrayInitializerMemberValue) value).getInitializers();
+
+            for (PsiAnnotationMemberValue initializer : initializers) {
+                values.add(initializer.getText().replaceAll("\\\"", ""));
+            }
+        }
+
+        return values;
+    }
 
     /**
      * 获取方法中的参数请求，生成RequestBean

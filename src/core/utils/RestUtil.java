@@ -10,7 +10,6 @@
  */
 package core.utils;
 
-import com.intellij.lang.jvm.annotation.*;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.project.Project;
@@ -19,9 +18,11 @@ import core.beans.Request;
 import core.utils.scanner.RetrofitHelperForAndroid;
 import core.utils.scanner.RetrofitHelperForFlutter;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @version 1.0
@@ -117,36 +118,5 @@ public class RestUtil {
         }
         url.append(path);
         return url.toString();
-    }
-
-    /**
-     * 获取属性值
-     *
-     * @param attributeValue Psi属性
-     * @return {Object | List}
-     */
-    @Nullable
-    public static Object getAttributeValue(JvmAnnotationAttributeValue attributeValue) {
-        if (attributeValue == null) {
-            return null;
-        }
-        if (attributeValue instanceof JvmAnnotationConstantValue) {
-            return ((JvmAnnotationConstantValue) attributeValue).getConstantValue();
-        } else if (attributeValue instanceof JvmAnnotationEnumFieldValue) {
-            return ((JvmAnnotationEnumFieldValue) attributeValue).getFieldName();
-        } else if (attributeValue instanceof JvmAnnotationArrayValue) {
-            List<JvmAnnotationAttributeValue> values = ((JvmAnnotationArrayValue) attributeValue).getValues();
-            List<Object> list = new ArrayList<>(values.size());
-            for (JvmAnnotationAttributeValue value : values) {
-                Object o = getAttributeValue(value);
-                if (o != null) {
-                    list.add(o);
-                }
-            }
-            return list;
-        } else if (attributeValue instanceof JvmAnnotationClassValue) {
-            return ((JvmAnnotationClassValue) attributeValue).getQualifiedName();
-        }
-        return null;
     }
 }
