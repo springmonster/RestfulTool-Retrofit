@@ -34,7 +34,7 @@
     <!-- please see https://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
          on how to target different products -->
     <depends>com.intellij.modules.platform</depends>
-    <!--    <depends>com.intellij.java</depends>-->
+    <depends>com.intellij.modules.java</depends>
     <depends>org.jetbrains.kotlin</depends>
     <depends>Dart</depends>
 
