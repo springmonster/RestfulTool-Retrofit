@@ -13,7 +13,9 @@ A set of auxiliary tools for Restful service development. <br>
 4. 支持 Flutter Retrofit -- Dart;<br>
 
 ## How to install
-Open Android Studio -> Preferences -> Plugins -> Install Plugin from Disk -> RestfulToolForAndroidAndFlutter.jar
+- **Need to install Flutter plugin first**
+- From local: Open Android Studio -> Preferences -> Plugins -> Install Plugin from Disk -> RestfulToolForAndroidAndFlutter.jar
+
 ## ScreenShot
 - Android
 ![image](https://github.com/springmonster/RestfulTool-Retrofit/blob/AndroidAndFlutter/screenshot/ScreenShot1.jpeg)
