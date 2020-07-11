@@ -9,7 +9,7 @@ import org.jetbrains.annotations.NotNull;
  * @version 1.0
  * @Author KuangHaochuan
  */
-public interface RestfulToolService {
+public interface RestrofitService {
 
     /**
      * getInstance
@@ -17,8 +17,8 @@ public interface RestfulToolService {
      * @param project project
      * @return obj
      */
-    static RestfulToolService getInstance(@NotNull Project project) {
-        return ServiceManager.getService(project, RestfulToolService.class);
+    static RestrofitService getInstance(@NotNull Project project) {
+        return ServiceManager.getService(project, RestrofitService.class);
     }
 
     /**

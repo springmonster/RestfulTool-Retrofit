@@ -13,7 +13,7 @@ package core.view.window;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowFactory;
-import core.service.RestfulToolService;
+import core.service.RestrofitService;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -24,6 +24,6 @@ public class RestfulToolWindowFactory implements ToolWindowFactory {
 
     @Override
     public void createToolWindowContent(@NotNull Project project, @NotNull ToolWindow toolWindow) {
-        RestfulToolService.getInstance(project).setupImpl(toolWindow);
+        RestrofitService.getInstance(project).setupImpl(toolWindow);
     }
 }

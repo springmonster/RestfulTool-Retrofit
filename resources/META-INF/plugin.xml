@@ -1,7 +1,7 @@
 <idea-plugin>
     <id>com.khch.restful.tool</id>
     <name>RestfulTool Retrofit</name>
-    <version>1.2</version>
+    <version>1.3</version>
     <vendor email="609779612@qq.com" url="609779612@qq.com">609779612@qq.com</vendor>
 
 
@@ -40,8 +40,8 @@
 
     <extensions defaultExtensionNs="com.intellij">
 
-        <projectService serviceInterface="core.service.RestfulToolService"
-                        serviceImplementation="core.service.impl.RestfulToolServiceImpl"/>
+        <projectService serviceInterface="core.service.RestrofitService"
+                        serviceImplementation="core.service.impl.RestrofitServiceImpl"/>
 
         <toolWindow id="RetrofitTool" anchor="right"
                     factoryClass="core.view.window.RestfulToolWindowFactory" order="last"

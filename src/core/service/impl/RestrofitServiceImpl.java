@@ -4,7 +4,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.ui.content.Content;
 import com.intellij.ui.content.ContentFactory;
-import core.service.RestfulToolService;
+import core.service.RestrofitService;
 import core.view.window.frame.RightToolJPanel;
 import org.jetbrains.annotations.NotNull;
 
@@ -12,11 +12,11 @@ import org.jetbrains.annotations.NotNull;
  * @version 1.0
  * @Author KuangHaochuan
  */
-public class RestfulToolServiceImpl implements RestfulToolService {
+public class RestrofitServiceImpl implements RestrofitService {
 
     private final Project project;
 
-    public RestfulToolServiceImpl(Project project) {
+    public RestrofitServiceImpl(Project project) {
         this.project = project;
     }
 
