@@ -43,7 +43,7 @@
         <projectService serviceInterface="core.service.RestfulToolService"
                         serviceImplementation="core.service.impl.RestfulToolServiceImpl"/>
 
-        <toolWindow id="RestfulTool" anchor="right"
+        <toolWindow id="RetrofitTool" anchor="right"
                     factoryClass="core.view.window.RestfulToolWindowFactory" order="last"
                     icon="/icons/service.png"/>
     </extensions>
