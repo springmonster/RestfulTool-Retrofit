@@ -1,5 +1,6 @@
 package core.service;
 
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.wm.ToolWindow;
@@ -18,7 +19,7 @@ public interface RestrofitService {
      * @return obj
      */
     static RestrofitService getInstance(@NotNull Project project) {
-        return ServiceManager.getService(project, RestrofitService.class);
+        return ApplicationManager.getApplication().getService(RestrofitService.class);
     }
 
     /**
