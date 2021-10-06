@@ -10,7 +10,7 @@
  */
 package core.view.icon;
 
-import com.intellij.openapi.util.IconLoader;
+import com.intellij.ui.IconManager;
 import core.beans.HttpMethod;
 import org.jetbrains.annotations.NotNull;
 
@@ -26,7 +26,7 @@ public class Icons {
 
     @NotNull
     public static Icon load(@NotNull String path) {
-        return IconLoader.getIcon(path);
+        return IconManager.getInstance().getIcon(path, Icons.class);
     }
 
     /**
