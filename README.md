@@ -24,5 +24,10 @@ A set of auxiliary tools for Restful service development. <br>
 ## ScreenShot
 - Android
 ![image](https://github.com/springmonster/RestfulTool-Retrofit/blob/AndroidAndFlutter/screenshot/ScreenShot1.jpeg)
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fspringmonster%2FRestfulTool-Retrofit.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Fspringmonster%2FRestfulTool-Retrofit?ref=badge_shield)
 - Flutter
 ![image](https://github.com/springmonster/RestfulTool-Retrofit/blob/AndroidAndFlutter/screenshot/ScreenShot2.jpeg)
+
+
+## License
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fspringmonster%2FRestfulTool-Retrofit.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2Fspringmonster%2FRestfulTool-Retrofit?ref=badge_large)
