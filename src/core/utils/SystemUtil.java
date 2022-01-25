@@ -1,13 +1,3 @@
-/*
-  Copyright (C), 2018-2020, ZhangYuanSheng
-  FileName: SystemUtil
-  Author:   ZhangYuanSheng
-  Date:     2020/5/26 01:03
-  Description: 
-  History:
-  <author>          <time>          <version>          <desc>
-  作者姓名            修改时间           版本号              描述
- */
 package core.utils;
 
 import java.awt.*;
@@ -16,11 +6,11 @@ import java.awt.datatransfer.StringSelection;
 import java.awt.datatransfer.Transferable;
 
 /**
+ * @author KuangHaochuan
  * @version 1.0
- * @Author KuangHaochuan
  */
 public class SystemUtil {
-
+    
     /**
      * 把文本设置到剪贴板（复制）
      */

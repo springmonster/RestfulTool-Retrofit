@@ -1,13 +1,3 @@
-/*
-  Copyright (C), 2018-2020, ZhangYuanSheng
-  FileName: RestfulTreeCellRenderer
-  Author:   ZhangYuanSheng
-  Date:     2020/5/6 15:41
-  Description: 
-  History:
-  <author>          <time>          <version>          <desc>
-  作者姓名            修改时间           版本号              描述
- */
 package core.view.window;
 
 import com.intellij.ui.ColoredTreeCellRenderer;
@@ -21,11 +11,11 @@ import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 
 /**
+ * @author KuangHaochuan
  * @version 1.0
- * @Author KuangHaochuan
  */
 public class RestfulTreeCellRenderer extends ColoredTreeCellRenderer {
-
+    
     @Override
     public void customizeCellRenderer(
             @NotNull JTree tree, Object value,
@@ -44,7 +34,7 @@ public class RestfulTreeCellRenderer extends ColoredTreeCellRenderer {
             append(String.format("Find %s services", obj));
         }
     }
-
+    
     private void setMethodTypeAndPath(@Nullable Request node, boolean selected) {
         if (node == null) {
             return;

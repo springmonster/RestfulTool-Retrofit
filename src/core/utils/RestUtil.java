@@ -1,13 +1,3 @@
-/*
-  Copyright (C), 2018-2020, ZhangYuanSheng
-  FileName: RestUtil
-  Author:   ZhangYuanSheng
-  Date:     2020/5/4 15:14
-  Description: 
-  History:
-  <author>          <time>          <version>          <desc>
-  作者姓名            修改时间           版本号              描述
- */
 package core.utils;
 
 import com.intellij.openapi.module.Module;
@@ -25,25 +15,25 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * @author KuangHaochuan
  * @version 1.0
- * @Author KuangHaochuan
  */
 public class RestUtil {
-
+    
     private static String BASE_URL = "http://localhost:8080";
-
+    
     public static void setBaseUrl(String baseUrl) {
         BASE_URL = baseUrl;
     }
-
+    
     public static String getBaseUrl() {
         return BASE_URL;
     }
-
+    
     public static GlobalSearchScope getModuleScope(@NotNull Module module) {
         return module.getModuleScope();
     }
-
+    
     /**
      * 获取所有的Request
      *
@@ -54,7 +44,7 @@ public class RestUtil {
     public static Map<String, List<Request>> getAllRequest(@NotNull Project project) {
         return getAllRequest(project, false);
     }
-
+    
     /**
      * 获取所有的Request
      *
@@ -65,7 +55,7 @@ public class RestUtil {
     @NotNull
     public static Map<String, List<Request>> getAllRequest(@NotNull Project project, boolean hasEmpty) {
         Map<String, List<Request>> map = new HashMap<>();
-
+        
         Module[] modules = ModuleManager.getInstance(project).getModules();
         for (Module module : modules) {
             List<Request> requests = getAllRequestByModule(project, module);
@@ -76,7 +66,7 @@ public class RestUtil {
         }
         return map;
     }
-
+    
     /**
      * 获取选中module的所有Request
      *
@@ -91,7 +81,7 @@ public class RestUtil {
         if (!retrofitRequestByModuleForAndroid.isEmpty()) {
             return retrofitRequestByModuleForAndroid;
         }
-
+        
         // Flutter  Retrofit RESTFul方式
         List<Request> retrofitRequestByModuleForFlutter = RetrofitHelperForFlutter.getRetrofitRequestByModule(project, module);
         if (!retrofitRequestByModuleForFlutter.isEmpty()) {
@@ -99,7 +89,7 @@ public class RestUtil {
         }
         return Collections.emptyList();
     }
-
+    
     /**
      * 获取拼接的url
      *

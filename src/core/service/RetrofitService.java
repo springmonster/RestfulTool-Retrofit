@@ -5,21 +5,21 @@ import com.intellij.openapi.wm.ToolWindow;
 import org.jetbrains.annotations.NotNull;
 
 /**
+ * @author KuangHaochuan
  * @version 1.0
- * @Author KuangHaochuan
  */
-public interface RestrofitService {
-
+public interface RetrofitService {
+    
     /**
      * getInstance
      *
      * @param project project
      * @return obj
      */
-    static RestrofitService getInstance(@NotNull Project project) {
-        return project.getService(RestrofitService.class);
+    static RetrofitService getInstance(@NotNull Project project) {
+        return project.getService(RetrofitService.class);
     }
-
+    
     /**
      * setupImpl
      *

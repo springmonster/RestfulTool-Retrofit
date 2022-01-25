@@ -4,13 +4,13 @@ import com.intellij.util.messages.Topic;
 import org.jetbrains.annotations.Nullable;
 
 /**
+ * @author KuangHaochuan
  * @version 1.0
- * @Author KuangHaochuan
  */
 public interface RestTopic {
-
+    
     Topic<RestTopic> ACTION_SCAN_SERVICE = Topic.create("RestTopic.ACTION_SCAN_SERVICE", RestTopic.class);
-
+    
     /**
      * after
      *

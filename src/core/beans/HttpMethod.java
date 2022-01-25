@@ -1,30 +1,20 @@
-/*
-  Copyright (C), 2018-2020, ZhangYuanSheng
-  FileName: RequestMethod
-  Author:   ZhangYuanSheng
-  Date:     2020/5/2 00:54
-  Description: 
-  History:
-  <author>          <time>          <version>          <desc>
-  作者姓名            修改时间           版本号              描述
- */
 package core.beans;
 
 /**
+ * @author KuangHaochuan
  * @version 1.0
- * @Author KuangHaochuan
  */
 public enum HttpMethod {
-
+    
     HEAD,
-
+    
     GET,
-
+    
     POST,
-
+    
     PUT,
-
+    
     PATCH,
-
+    
     DELETE
 }

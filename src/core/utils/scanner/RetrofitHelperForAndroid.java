@@ -25,31 +25,31 @@ import java.util.*;
  * @version 1.0
  */
 public class RetrofitHelperForAndroid {
-
+    
     @NotNull
     public static List<Request> getRetrofitRequestByModule(@NotNull Project project, @NotNull Module module) {
         List<Request> moduleList = new ArrayList<>();
-
+        
         List<PsiClass> controllers = getAllRetrofitJavaClass(project, module);
         controllers.addAll(getAllRetrofitKotlinClass(project, module));
-
+        
         if (controllers.isEmpty()) {
             return moduleList;
         }
-
+        
         for (PsiClass controllerClass : controllers) {
             List<Request> childrenRequests = new ArrayList<>();
-
+            
             PsiMethod[] psiMethods = controllerClass.getMethods();
             for (PsiMethod psiMethod : psiMethods) {
                 childrenRequests.addAll(getRequests(psiMethod));
             }
             moduleList.addAll(childrenRequests);
         }
-
+        
         return moduleList;
     }
-
+    
     /**
      * 获取所有的Retrofit Java
      *
@@ -60,21 +60,21 @@ public class RetrofitHelperForAndroid {
     @NotNull
     private static List<PsiClass> getAllRetrofitJavaClass(@NotNull Project project, @NotNull Module module) {
         GlobalSearchScope moduleScope = RestUtil.getModuleScope(module);
-
+        
         List<PsiClass> psiClasses = new ArrayList<>();
-
+        
         Collection<VirtualFile> virtualFiles = FilenameIndex.getAllFilesByExt(project, "java", moduleScope);
-
+        
         virtualFiles.forEach(virtualFile -> {
             List<PsiClass> psiClassList = (List<PsiClass>) JavaShortClassNameIndex.getInstance().get(virtualFile.getNameWithoutExtension(), project, moduleScope);
             if (psiClassList != null && !psiClassList.isEmpty() && psiClassList.get(0).isInterface()) {
                 psiClasses.add(psiClassList.get(0));
             }
         });
-
+        
         return psiClasses;
     }
-
+    
     /**
      * 获取所有的Retrofit Kotlin
      *
@@ -85,11 +85,11 @@ public class RetrofitHelperForAndroid {
     @NotNull
     private static List<PsiClass> getAllRetrofitKotlinClass(@NotNull Project project, @NotNull Module module) {
         GlobalSearchScope moduleScope = RestUtil.getModuleScope(module);
-
+        
         List<PsiClass> psiClassList = new ArrayList<>();
-
+        
         Collection<VirtualFile> virtualFiles = FilenameIndex.getAllFilesByExt(project, "kt", moduleScope);
-
+        
         virtualFiles.forEach(virtualFile -> {
             PsiClass[] psiClasses = KotlinShortNamesCache.getInstance(project).getClassesByName(virtualFile.getNameWithoutExtension(), moduleScope);
             List<PsiClass> classList = Arrays.asList(psiClasses);
@@ -97,10 +97,10 @@ public class RetrofitHelperForAndroid {
                 psiClassList.add(classList.get(0));
             }
         });
-
+        
         return psiClassList;
     }
-
+    
     /**
      * 获取注解中的参数，生成RequestBean
      *
@@ -118,10 +118,10 @@ public class RetrofitHelperForAndroid {
         }
         Set<HttpMethod> methods = new HashSet<>();
         methods.add(androidHttpMethodAnnotation.getMethod());
-
+        
         List<String> values = getAnnotationAttributeValues(annotation, "value");
         List<Request> requests = new ArrayList<>(values.size());
-
+        
         values.forEach(path -> {
             for (HttpMethod method : methods) {
                 requests.add(new Request(
@@ -133,10 +133,10 @@ public class RetrofitHelperForAndroid {
         });
         return requests;
     }
-
+    
     public static List<String> getAnnotationAttributeValues(PsiAnnotation annotation, String attr) {
         PsiAnnotationMemberValue value = annotation.findDeclaredAttributeValue(attr);
-
+        
         List<String> values = new ArrayList<>();
         //只有注解
         //一个值 class com.intellij.psi.impl.source.tree.java.PsiLiteralExpressionImpl
@@ -149,15 +149,15 @@ public class RetrofitHelperForAndroid {
             values.add(((PsiLiteralExpression) value).getValue().toString());
         } else if (value instanceof PsiArrayInitializerMemberValue) {
             PsiAnnotationMemberValue[] initializers = ((PsiArrayInitializerMemberValue) value).getInitializers();
-
+            
             for (PsiAnnotationMemberValue initializer : initializers) {
                 values.add(initializer.getText().replaceAll("\\\"", ""));
             }
         }
-
+        
         return values;
     }
-
+    
     /**
      * 获取方法中的参数请求，生成RequestBean
      *
@@ -167,13 +167,13 @@ public class RetrofitHelperForAndroid {
     @NotNull
     private static List<Request> getRequests(@NotNull PsiMethod method) {
         List<Request> requests = new ArrayList<>();
-
+        
         PsiAnnotation[] annotations = method.getModifierList().getAnnotations();
-
+        
         for (PsiAnnotation annotation : annotations) {
             requests.addAll(getRequests(annotation, method));
         }
-
+        
         return requests;
     }
 }

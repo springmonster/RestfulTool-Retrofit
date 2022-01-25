@@ -1,13 +1,3 @@
-/*
-  Copyright (C), 2018-2020, ZhangYuanSheng
-  FileName: SpringHelper
-  Author:   ZhangYuanSheng
-  Date:     2020/5/28 21:08
-  Description: 
-  History:
-  <author>          <time>          <version>          <desc>
-  作者姓名            修改时间           版本号              描述
- */
 package core.utils.scanner;
 
 import com.intellij.openapi.module.Module;
@@ -35,44 +25,44 @@ import java.util.List;
  */
 public class RetrofitHelperForFlutter {
     private static final String REST_API = "@RestApi()";
-
+    
     @NotNull
     public static List<Request> getRetrofitRequestByModule(@NotNull Project project, @NotNull Module module) {
         return getAllRetrofitDartClass(project, module);
     }
-
+    
     @NotNull
     private static List<Request> getAllRetrofitDartClass(@NotNull Project project, @NotNull Module module) {
-
+        
         List<Request> requests = new ArrayList<>();
-
+        
         Collection<VirtualFile> virtualFiles = FilenameIndex.getAllFilesByExt(project, "dart");
-
+        
         virtualFiles.forEach(virtualFile -> {
             DartFile psiFile = (DartFile) PsiUtilBase.getPsiFile(project, virtualFile);
-
+            
             String text = psiFile.getText();
-
+            
             if (text.contains(REST_API)) {
                 DartClass dartClass = PsiTreeUtil.findChildOfType(psiFile, DartClass.class);
                 List<DartComponent> methods = dartClass.getMethods();
-
-
+                
+                
                 for (DartComponent dartComponent : methods) {
                     List<DartMetadata> metadataList = dartComponent.getMetadataList();
-
+                    
                     for (DartMetadata dartMetadata : metadataList) {
                         String httpMethod = dartMetadata.getFirstChild().getNextSibling().getText();
-
+                        
                         FlutterHttpMethodAnnotation byQualifiedName = FlutterHttpMethodAnnotation.getByQualifiedName(httpMethod);
-
+                        
                         if (byQualifiedName == null) {
                             continue;
                         }
-
+                        
                         PsiElement lastChild = dartMetadata.getLastChild();
                         String path = lastChild.getText().substring(2, lastChild.getTextLength() - 2);
-
+                        
                         requests.add(new Request(
                                 byQualifiedName.getMethod(),
                                 path,
@@ -82,7 +72,7 @@ public class RetrofitHelperForFlutter {
                 }
             }
         });
-
+        
         return requests;
     }
 }
