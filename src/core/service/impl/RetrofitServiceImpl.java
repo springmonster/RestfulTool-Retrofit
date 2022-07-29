@@ -1,5 +1,6 @@
 package core.service.impl;
 
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.ui.content.Content;
@@ -24,7 +25,7 @@ public class RetrofitServiceImpl implements RetrofitService {
     public void setupImpl(@NotNull ToolWindow toolWindow) {
         RightToolJPanel view = new RightToolJPanel(project);
         
-        ContentFactory contentFactory = ContentFactory.SERVICE.getInstance();
+        ContentFactory contentFactory = ApplicationManager.getApplication().getService(ContentFactory.class);
         Content content = contentFactory.createContent(view, "", false);
         
         toolWindow.getContentManager().addContent(content);
