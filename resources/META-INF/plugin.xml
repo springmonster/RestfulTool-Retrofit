@@ -1,7 +1,7 @@
 <idea-plugin>
     <id>com.khch.restful.tool</id>
     <name>RestfulTool Retrofit</name>
-    <version>1.7</version>
+    <version>1.8</version>
     <vendor email="609779612@qq.com" url="609779612@qq.com">609779612@qq.com</vendor>
 
 
@@ -29,7 +29,7 @@
     </change-notes>
 
     <!-- please see https://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/build_number_ranges.html for description -->
-    <idea-version since-build="193.7288.26" until-build="222.*"/>
+    <idea-version since-build="193.7288.26" until-build="223.*"/>
 
     <!-- please see https://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
          on how to target different products -->
