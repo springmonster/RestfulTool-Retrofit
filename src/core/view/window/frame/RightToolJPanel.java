@@ -145,7 +145,7 @@ public class RightToolJPanel extends JPanel {
         // 控制器扫描监听
         scanApi.addActionListener(e -> renderRequestTree());
         
-        project.getMessageBus().connect().subscribe(RestTopic.ACTION_SCAN_SERVICE, data -> {
+        project.getMessageBus().connect().subscribe(RestTopic.ACTION_SCAN_SERVICE, (RestTopic) data -> {
             if (data instanceof Map) {
                 //noinspection unchecked
                 renderRequestTree((Map<String, List<Request>>) data);

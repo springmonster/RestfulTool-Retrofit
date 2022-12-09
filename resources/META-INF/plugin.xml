@@ -1,7 +1,7 @@
 <idea-plugin>
     <id>com.khch.restful.tool</id>
     <name>RestfulTool Retrofit</name>
-    <version>1.8</version>
+    <version>1.9</version>
     <vendor email="609779612@qq.com" url="609779612@qq.com">609779612@qq.com</vendor>
 
 
@@ -45,7 +45,7 @@
 
         <toolWindow id="RetrofitTool" anchor="right"
                     factoryClass="core.view.window.RestfulToolWindowFactory" order="last"
-                    icon="/icons/service.png"/>
+                    icon="/icons/service.svg"/>
     </extensions>
 
 </idea-plugin>
