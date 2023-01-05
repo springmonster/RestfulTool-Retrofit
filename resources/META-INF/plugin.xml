@@ -23,7 +23,8 @@
     <!--suppress PluginXmlValidity -->
     <change-notes><![CDATA[
       <ul>
-        <li> Optimize project structure </li>
+        <li> Change Plugin Icon </li>
+        <li> Fix Java Version Bug </li>
       </ul>
     ]]>
     </change-notes>
